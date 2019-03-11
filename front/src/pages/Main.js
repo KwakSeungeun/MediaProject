@@ -6,9 +6,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
-import './App.css';
 
-class App extends Component {
+class Main extends Component {
   state = {
     open: true,
   };
@@ -23,7 +22,7 @@ class App extends Component {
   
   render() {
     return (
-      <div className="App-header">
+      <div>
         <Dialog
           open={this.state.open}
           onClose={this.handleClose}
@@ -37,12 +36,6 @@ class App extends Component {
             <DialogContentText id="alert-dialog-description">
               로그인 및 회원가입
             </DialogContentText>
-            <TextField
-              label="ID를 입력하세요."
-              onChange={this.handleChange('name')}
-              margin="normal"
-              variant="outlined"
-            />
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleClose} color="primary" autoFocus>닫기</Button>
@@ -53,4 +46,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default Main;

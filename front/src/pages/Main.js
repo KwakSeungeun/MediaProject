@@ -1,46 +1,27 @@
 import React, { Component } from 'react';
-import Dialog from '@material-ui/core/Dialog';
-import Button from '@material-ui/core/Button';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import TextField from '@material-ui/core/TextField';
+import LoginModal from '../components/LoginModal'
+import Toolbar from '@material-ui/core/Toolbar';
+import AppBar from '@material-ui/core/AppBar';
+import Typography from '@material-ui/core/Typography';
 
 class Main extends Component {
-  state = {
-    open: true,
-  };
-
-  handleClose = () => {
-    this.setState({ open: false });
-  };
-
-  handleChange = (text) => {
-    console.log("TEST : ",text);
-  };
-  
   render() {
     return (
       <div>
-        <Dialog
-          open={this.state.open}
-          onClose={this.handleClose}
-          disableBackdropClick = {true}
-          fullWidth = {true}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">{"Cloud Service"}</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              로그인 및 회원가입
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={this.handleClose} color="primary" autoFocus>닫기</Button>
-          </DialogActions>
-        </Dialog>
+        <LoginModal/>
+        <AppBar position="static" color="default">
+          <Toolbar>
+            <Typography variant="h5">
+              Cloud Service              
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <div>
+          {/* 사이드바 */}
+          <div></div>
+          {/* 메인 */}
+          <div></div>
+        </div>
       </div>
     );
   }

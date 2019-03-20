@@ -3,7 +3,6 @@ import Dialog from '@material-ui/core/Dialog';
 import Button from '@material-ui/core/Button';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
 import SHA512  from 'crypto-js/sha512';
@@ -26,6 +25,7 @@ class LoginModal extends Component {
   onSignup = () => {
       //TODO : OPEN NEW SIGN UP MODAL
       console.log('ID : ',this.state.id, '\nPW : ',SHA512(this.state.pw));
+      this.setState({ open: false });
 }
 
   handleChange = name => event => {

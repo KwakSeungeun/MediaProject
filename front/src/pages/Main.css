@@ -1,0 +1,19 @@
+.top-container{
+    height: 10vh;
+}
+.main-container{
+    height: 90vh;
+    display: flex;
+    flex-direction: row;
+}
+.side-container{
+    background: yellow;
+    padding: 20px;
+    flex: 2;
+}
+.contents-container{
+    background: skyblue;
+    padding: 20px;
+    flex: 10;
+    overflow-y: scroll;
+}

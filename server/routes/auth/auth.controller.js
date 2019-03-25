@@ -15,18 +15,22 @@ exports.register = (req, res, next) => {
     }).spread((user, created)=>{
         if(created) {
             msg = 'CREATE user';
-            res.send({success : msg})
+            res.json({
+                message : msg,
+                success : true
+            });
         }
         else {
             msg = email + ' is alrady exist';
             res.status(500).json({
                 message : msg,
-                created : false
+                success : false
             });
         }
     }).catch(err =>{
         res.status(500).json({
-            message : err.message
+            message : err.message,
+            success : false
         });
     });
 }
@@ -42,14 +46,14 @@ exports.login  = (req, res, next) => {
         if(!user){
             res.status(500).json({
                 message : "not found user",
-                login : false
+                success : false
             });
         } else {
             // check password
             if(user.pw != pw){
                 res.status(500).json({
                     message : "incorrect pw",
-                    login : false
+                    success : false
                 });
             } else {
                 new Promise((resolve, reject) =>{
@@ -67,13 +71,14 @@ exports.login  = (req, res, next) => {
                 }).then(token=>{
                     res.json({
                         message : "success login",
-                        login : true
+                        token : token,
+                        success : true
                     });
                 }).catch(err=>{
                     console.log(err);
                     res.status(500).json({
                         message : "fail create token",
-                        login : false
+                        success : false
                     });
                 });
             }
@@ -82,5 +87,13 @@ exports.login  = (req, res, next) => {
         res.status(500).json({
             message : err.message
         })
+    });
+}
+
+exports.check = (req, res, next) => {
+    res.json({
+        message: 'vaild token',
+        info: req.token,
+        success: true
     });
 }

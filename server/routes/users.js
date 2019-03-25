@@ -29,4 +29,10 @@ router.get('/signup', function(req, res, next) {
   res.send('respond with a resource');
 });
 
+//회원정보 수정
+router.get('/modify', function(req, res, next) {
+  res.send('respond with a resource');
+});
+
+
 module.exports = router;

@@ -6,6 +6,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
 import SHA512  from 'crypto-js/sha512';
+import axios from 'axios';
+import config from '../config/config';
 
 class LoginModal extends Component {
   state = {
@@ -14,19 +16,37 @@ class LoginModal extends Component {
     pw: '',
   };
 
-  onLogin = () => {
+  onLogin = async() => {
     console.log('ID : ',this.state.id, '\nPW : ',this.state.pw);
     // 로그인 성공시
-    if(true){
-        this.setState({ open: false });
-    }
+    await axios.post(`${config.serverUri}/auth/login`, {
+      email : this.state.id,
+      pw : this.state.pw // crypto 사용한 개선 필요
+    }).then(res =>{
+      if(res.status===200 && res.data.success){
+        // web storage에 token 저장하면 자동로그인 가능
+        // redux사용해서 User정보 넣기
+        this.setState({ 
+          open : false,
+          id : '',
+          pw: '' 
+        });
+        alert("로그인 성공!");
+      }
+    }).catch(err => {
+      console.log("ERR:", err.response);
+      if(err.response.status===500 && !err.response.data.success){
+        alert('아이디 또는 비밀번호가 틀렸습니다.');
+        this.setState({ pw: '' });
+      }
+    })
   };
 
   onSignup = () => {
-      //TODO : OPEN NEW SIGN UP MODAL
-      console.log('ID : ',this.state.id, '\nPW : ',SHA512(this.state.pw));
-      this.setState({ open: false });
-}
+    //TODO : OPEN NEW SIGN UP MODAL
+    console.log('ID : ',this.state.id, '\nPW : ',SHA512(this.state.pw));
+    this.setState({ open: false });
+  }
 
   handleChange = name => event => {
     this.setState({
@@ -39,7 +59,6 @@ class LoginModal extends Component {
       <div>
         <Dialog
           open={this.state.open}
-          onClose={this.handleClose}
           disableBackdropClick = {true}
           fullWidth = {true}
           aria-labelledby="alert-dialog-title"

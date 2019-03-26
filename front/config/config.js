@@ -1,1 +1,0 @@
-exports.serverUri = 'http://loaclhost:8080';

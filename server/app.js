@@ -3,6 +3,8 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const cors = require('cors');
+
 var logger = require('morgan');
 
 const authRouter = require('./routes/auth');
@@ -14,6 +16,7 @@ var app = express();
 const jwt_config = require('./config/jwt.config');
 app.set('jwt-secret', jwt_config.secret)
 
+app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

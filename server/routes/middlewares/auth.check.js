@@ -4,8 +4,8 @@ const authMiddleware = (req, res, next) => {
     console.log("**MIDDLEWARE**\n\n", token);
 
     if(!token){
-        res.status(500).json({
-            message: 'not logged in',
+        res.status(401).json({
+            message: 'Unauthorized',
             success: false
         })
     }

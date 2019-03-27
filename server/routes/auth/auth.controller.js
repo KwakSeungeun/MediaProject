@@ -1,11 +1,25 @@
 const User = require('../../models/user');
 const jwt = require('jsonwebtoken');
+const axios = require('axios');
+const cloud = require('../../config/cloud.config');
 
 exports.register = (req, res, next) => {
     const { email, pw } = req.body;
-
     let msg = '';
-    // 조회 후에 없는 값이면 생성하고, 있는 값이면 그 값을 가져오는 operation
+    // axios.post(`${cloud.uri}/v3/auth/tokens`, cloud.admin_info)
+    // .then(res =>{
+    //     // console.log('res', res.headers);
+    //     axios.get(`${cloud.uri}/v3/users`)
+    //     .then(res=>{
+    //         console.log("res \n\n", res);
+    //     }).catch(err=>{
+    //         console.log("err` \n\n", err);
+    //     });
+    // }).catch(err=>{
+    //     console.log('get tokens : ', err);
+    // });
+    // res.send('SUCCESS');
+    
     User.findOrCreate({
         where: { email : email },
         defaults:{

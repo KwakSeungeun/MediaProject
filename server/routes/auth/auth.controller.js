@@ -4,21 +4,8 @@ const axios = require('axios');
 const cloud = require('../../config/cloud.config');
 
 exports.register = (req, res, next) => {
-    const { email, pw } = req.body;
+    const { email, pw, name } = req.body;
     let msg = '';
-    // axios.post(`${cloud.uri}/v3/auth/tokens`, cloud.admin_info)
-    // .then(res =>{
-    //     // console.log('res', res.headers);
-    //     axios.get(`${cloud.uri}/v3/users`)
-    //     .then(res=>{
-    //         console.log("res \n\n", res);
-    //     }).catch(err=>{
-    //         console.log("err` \n\n", err);
-    //     });
-    // }).catch(err=>{
-    //     console.log('get tokens : ', err);
-    // });
-    // res.send('SUCCESS');
     
     User.findOrCreate({
         where: { email : email },
@@ -28,10 +15,45 @@ exports.register = (req, res, next) => {
         }
     }).spread((user, created)=>{
         if(created) {
-            msg = 'CREATE user';
-            res.json({
-                message : msg,
-                success : true
+            axios.post(`${cloud.uri}/v3/auth/tokens`, cloud.admin_info)
+            .then(result =>{
+                let token = result.headers['x-subject-token'];
+                let new_user = {
+                    "user": {
+                        "default_project_id": `${cloud.default_project_id}`,
+                        "domain_id": "default",
+                        "enabled": true,
+                        "name": name,
+                        "password": pw,
+                        "email": email,
+                        "options": {
+                            "ignore_password_expiry": true
+                        }
+                    }
+                }
+                axios.post(`${cloud.uri}/v3/users`, new_user, {
+                    headers : {
+                        'Content-Type': 'application/json',
+                        "X-Auth-Token" : `${token}`
+                    }
+                }).then(result =>{
+                    res.json({
+                        message: "success create user",
+                        success : true
+                    });
+                }).catch(err=>{
+                    console.log("ERR : ", err);
+                    res.status(500).json({
+                        message: 'Unable create user in cloud',
+                        success : false
+                    });
+                });
+            }).catch(err=>{
+                console.log('Unable get tokens : ', err);
+                res.status(500).json({
+                    message: 'Unable get tokens',
+                    success : false
+                });
             });
         }
         else {

@@ -1,5 +1,9 @@
 # MediaProject
 
+### `npm start`
+
+npm start로 서버 시작 -> [http://localhost:8080/] : route uri이다.
+
 ### Status Code
 
 * 200 : success

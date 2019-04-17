@@ -1,19 +1,26 @@
 .top-container{
-    height: 10vh;
+    height: 15vh;
+    background: #fafafa
+}
+
+.top-container .topRight{
+
 }
 .main-container{
-    height: 90vh;
+    height: 85vh;
     display: flex;
     flex-direction: row;
+    /* background: red; */
 }
 .side-container{
-    background: yellow;
+    background: #fafafa;
     padding: 20px;
     flex: 2;
+    overflow-y: auto;
 }
 .contents-container{
-    background: skyblue;
+    background: #fafafa;
     padding: 20px;
     flex: 10;
-    overflow-y: scroll;
+    overflow-y: auto;
 }

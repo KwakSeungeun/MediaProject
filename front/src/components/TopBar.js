@@ -1,27 +1,54 @@
-import React, { Component } from 'react';
-import Toolbar from '@material-ui/core/Toolbar';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
-import Typography from '@material-ui/core/Typography';
+import Toolbar from '@material-ui/core/Toolbar';
+import Button from '@material-ui/core/Button';
+import logo from './img/logo2.png'
+import profile from './img/profile.jpg'
+import Avatar from '@material-ui/core/Avatar';
+import Grid from '@material-ui/core/Grid';
 
+const styles = {
+  avatar: {
+    margin: 10,
+    width: 60,
+    height: 60
+  },
+  img: {
+    width: 120,
+    height: 80,
+  }
+};
 
-class TopBar extends Component {
-    state = {
-        open: false,
-    };
+function TopBar(props) {
+
+    // var goHome = function() {
+    //     console.log('go home');
+    // }
     
-    render() {
-        return (
-        <div>
-            <AppBar position="static" color="default">
-                <Toolbar>
-                <Typography variant="h5">
-                    Cloud Service              
-                </Typography>
-                </Toolbar>
-            </AppBar>
+    const { classes } = props;
+    return (
+        <div className={classes.root}>
+        {/* <AppBar position="static" color = "fafafa">       */}
+            <Toolbar>
+                <Grid container>
+                    <Grid item alignItems="flex-start">
+                        <Button><img src={logo} alt= "home" className={classes.img} /></Button>
+                    </Grid>
+                    <Grid item alignItems="center">사진 올려놓기</Grid>
+                    <Grid item alignItems="flex-end">
+                        <Button><Avatar alt="Sample" src={profile} className={classes.avatar} /></Button>
+                    </Grid>
+                </Grid>     
+            </Toolbar>
+        {/* </AppBar> */}
         </div>
-        );
-    }
+  );
 }
 
-export default TopBar;
+TopBar.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(TopBar);

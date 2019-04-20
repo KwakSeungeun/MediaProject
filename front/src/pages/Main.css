@@ -1,25 +1,25 @@
 .top-container{
-    height: 15vh;
-    background: #fafafa
+    height: 10vh;
+    /* background: #fafafa; */
+    background: skyblue;
 }
 
-.top-container .topRight{
-
-}
 .main-container{
-    height: 85vh;
+    height: 90vh;
     display: flex;
     flex-direction: row;
     /* background: red; */
 }
 .side-container{
-    background: #fafafa;
+    /* background: #fafafa; */
+    background: green;
     padding: 20px;
     flex: 2;
     overflow-y: auto;
 }
 .contents-container{
-    background: #fafafa;
+    /* background: #fafafa; */
+    background: yellow;
     padding: 20px;
     flex: 10;
     overflow-y: auto;

@@ -8,12 +8,21 @@ import Person from '@material-ui/icons/Person';
 import PersonAdd from '@material-ui/icons/PersonAdd';
 import Button from '@material-ui/core/Button';
 import logo from '../img/logo2.png';
+import LoginModal from './LoginModal.js';
+import SignUpModal from './SignUpModal.js';
 
 class TopBar extends Component {
-    state = {
-        searchText : "",
-        isLoggedIn : false,
+    constructor(props){
+        super(props);
+
+        this.state = {
+            searchText : "",
+            isLoggedIn : false,
+            loginModal : false,
+            signupModal : false
+        };
     }
+    
 
     goHome = () =>{
         console.log("CLICK LOGO");
@@ -25,6 +34,7 @@ class TopBar extends Component {
 
     onLogin=()=>{
         console.log("CLICK LOGIN BUTTON");
+        this.setState({loginModal : true});
     };
 
     onSignup = ()=>{
@@ -55,14 +65,15 @@ class TopBar extends Component {
                     <div></div>
                     // false
                     :<div className="row-container">
-                        <Button onClick={this.onLogin()} variant="outlined" className="flex-1"> 
+                        <Button onClick={this.onLogin} variant="outlined" className="flex-1"> 
                             <Person />LOGIN
                         </Button>
-                        <Button onClick={this.onSignup()} variant="outlined" className="flex-2">
+                        <Button onClick={this.onSignup} variant="outlined" className="flex-2">
                             <PersonAdd />SIGN UP
                         </Button>
                     </div>
                 }
+                <LoginModal open={this.state.loginModal}/>
                 </div>
             </div>
       );

@@ -10,7 +10,7 @@ class SignUpModal extends Component {
         return (
         <div>
             <Dialog
-            open={this.state.open}
+            open={this.props.open}
             onClose={this.handleClose}
             disableBackdropClick = {true}
             fullWidth = {true}

@@ -5,3 +5,18 @@
     align-items: center;
     border-radius: 8px;
 }
+
+.dialog-title-contianer{
+    width: 100%;
+}
+
+.dialog-title{
+    /* background: yellow; */
+    width: 80%;
+    float: left;
+}
+.dialog-close{
+    /* background: green; */
+    width: 10%;
+    float: left;
+}

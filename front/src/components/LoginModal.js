@@ -8,16 +8,30 @@ import TextField from '@material-ui/core/TextField';
 import SHA512  from 'crypto-js/sha512';
 import axios from 'axios';
 import config from '../config/config';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 
 class LoginModal extends Component {
-  state = {
-    open: true,
-    id: '',
-    pw: '',
-  };
+  constructor(props){ // component가 새로 만들어 질때 사용 -> props값이 바뀌어도 모름
+    super(props);
+
+    this.state = {
+      open: true,
+      id: '',
+      pw: '',
+    };
+  }
+
+  componentWillReceiveProps(nextProps){ // props가 바뀌기 전에 호출 nextProps : 바뀔 props값
+    this.setState({open: nextProps.open});
+  }
 
   onLogin = async() => {
     console.log('ID : ',this.state.id, '\nPW : ',this.state.pw);
+    if(this.state.id==='' || this.state.pw===''){
+      alert('빈칸을 모두 채워 주세요!');
+      return;
+    }
     // 로그인 성공시
     await axios.post(`${config.serverUri}/auth/login`, {
       email : this.state.id,
@@ -42,10 +56,8 @@ class LoginModal extends Component {
     })
   };
 
-  onSignup = () => {
-    //TODO : OPEN NEW SIGN UP MODAL
-    console.log('ID : ',this.state.id, '\nPW : ',SHA512(this.state.pw));
-    this.setState({ open: false });
+  onClose = ()=>{
+    this.setState({open: false});
   }
 
   handleChange = name => event => {
@@ -64,7 +76,12 @@ class LoginModal extends Component {
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
-          <DialogTitle>{"Cloud Service 로그인 및 회원가입"}</DialogTitle>
+        <div className="dialog-title-contianer">
+          <DialogTitle className='dialog-title'>{"Cloud Service 로그인 및 회원가입"}</DialogTitle>
+          <IconButton className='dialog-close' aria-label="Close" onClick={this.onClose}>
+            <CloseIcon />
+          </IconButton>
+        </div>
           <DialogContent>
               <form>
                 <TextField
@@ -85,17 +102,11 @@ class LoginModal extends Component {
                     onChange={this.handleChange('pw')}/>   
               </form>          
           </DialogContent>
-          <DialogActions className="two-container">
+          <DialogActions>
             <Button 
-                className="two-contents" 
                 onClick={this.onLogin} 
                 variant='outlined'
                 color="primary">로그인</Button>
-            <Button 
-                className="two-contents" 
-                onClick={this.onSignup} 
-                variant='outlined'
-                color="primary">회원가입</Button>
           </DialogActions>
         </Dialog>
       </div>

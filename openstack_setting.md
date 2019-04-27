@@ -33,3 +33,5 @@ scp -i pem파일(디렉토리 포함) / 전송할 파일 / 원격지 유저이�
 >>원격지의 다운로드 위치의 소유자와 유저이름이 일치해야 함 > chown 
 >>permission denied > 디렉토리 권한 확인 ex)700?????
 
+>>  /etc/swift/swift.conf >> 설정 링크 주소 변경
+https://opendev.org/openstack/swift/raw/branch/stable/rocky/etc/swift.conf-sample

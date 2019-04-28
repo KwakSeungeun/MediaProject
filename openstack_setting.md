@@ -11,11 +11,17 @@ apt list --installed
 ec2 인스턴스에 파일시스템 추가방법
 새로운 EBS를 인스턴스에 추가하고 연결 > 해당 EBS 파일시스템 설정 > 인스턴스와 EBS 마운트 > /etc/fstab 설정에 디바이스 등록해서 재부팅할 때마다 연결된 EBS 볼륨을 탑재하도록 함
 
->> vim /etc/swift/account, container, object-server.conf >> 설정 링크 주소 변경
-
+<h2>conf 링크 주소</h2>
+>> vim /etc/swift/account, container, object-server.conf >>
 https://opendev.org/openstack/swift/raw/branch/stable/rocky/etc/account-server.conf-sample
 https://opendev.org/openstack/swift/raw/branch/stable/rocky/etc/container-server.conf-sample
 https://opendev.org/openstack/swift/raw/branch/stable/rocky/etc/object-server.conf-sample
+
+>>  /etc/swift/swift.conf >> 
+https://opendev.org/openstack/swift/raw/branch/stable/rocky/etc/swift.conf-sample
+
+>> /etc/swift/proxy-server.conf >>
+file:///C:/Users/park/Desktop/%EC%83%88%20%ED%85%8D%EC%8A%A4%ED%8A%B8%20%EB%AC%B8%EC%84%9Cproxy.html
 
 
 ec2 인스턴스간 통신 > 각각의 인스턴스가 포함된 보안그룹의 인바운드 규칙 수정 > 모든icmp ipv4 > 통신을 원하는 인스턴스가 속한 보안 그룹 추가 ( 두 인스턴스가 같은 보안 그룹에 속해있는 경우 인바운드 규칙에 해당 보안 그룹을 포함해주어야 통신 가능 > ping 확인
@@ -33,5 +39,3 @@ scp -i pem파일(디렉토리 포함) / 전송할 파일 / 원격지 유저이�
 >>원격지의 다운로드 위치의 소유자와 유저이름이 일치해야 함 > chown 
 >>permission denied > 디렉토리 권한 확인 ex)700?????
 
->>  /etc/swift/swift.conf >> 설정 링크 주소 변경
-https://opendev.org/openstack/swift/raw/branch/stable/rocky/etc/swift.conf-sample

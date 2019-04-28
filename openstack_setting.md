@@ -21,7 +21,7 @@ https://opendev.org/openstack/swift/raw/branch/stable/rocky/etc/object-server.co
 https://opendev.org/openstack/swift/raw/branch/stable/rocky/etc/swift.conf-sample
 
 >> /etc/swift/proxy-server.conf >>
-file:///C:/Users/park/Desktop/%EC%83%88%20%ED%85%8D%EC%8A%A4%ED%8A%B8%20%EB%AC%B8%EC%84%9Cproxy.html
+https://opendev.org/openstack/swift/raw/branch/stable/rocky/etc/proxy-server.conf-sample
 
 
 ec2 인스턴스간 통신 > 각각의 인스턴스가 포함된 보안그룹의 인바운드 규칙 수정 > 모든icmp ipv4 > 통신을 원하는 인스턴스가 속한 보안 그룹 추가 ( 두 인스턴스가 같은 보안 그룹에 속해있는 경우 인바운드 규칙에 해당 보안 그룹을 포함해주어야 통신 가능 > ping 확인

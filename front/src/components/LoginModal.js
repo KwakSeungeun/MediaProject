@@ -5,7 +5,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
-import SHA512  from 'crypto-js/sha512';
+// import SHA512  from 'crypt o-js/sha512';
 import axios from 'axios';
 import config from '../config/config';
 import IconButton from '@material-ui/core/IconButton';
@@ -16,7 +16,7 @@ class LoginModal extends Component {
     super(props);
 
     this.state = {
-      open: true,
+      open: false,
       id: '',
       pw: '',
     };

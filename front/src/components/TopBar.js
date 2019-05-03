@@ -1,15 +1,9 @@
 import React, { Component } from 'react';
 import '../index.css'
-import './components.css'
 import InputBase from '@material-ui/core/InputBase';
 import IconButton from '@material-ui/core/IconButton';
 import SearchIcon  from '@material-ui/icons/Search';
-import Person from '@material-ui/icons/Person';
-import PersonAdd from '@material-ui/icons/PersonAdd';
-import Button from '@material-ui/core/Button';
 import logo from '../img/logo2.png';
-import LoginModal from './LoginModal.js';
-import SignUpModal from './SignUpModal.js';
 
 class TopBar extends Component {
     constructor(props){
@@ -59,21 +53,6 @@ class TopBar extends Component {
 
                 {/* 프로필 및 설정 */}
                 <div className="flex-2">
-                {
-                    this.state.isLoggedIn?
-                    // true
-                    <div></div>
-                    // false
-                    :<div className="row-container">
-                        <Button onClick={this.onLogin} variant="outlined" className="flex-1"> 
-                            <Person />LOGIN
-                        </Button>
-                        <Button onClick={this.onSignup} variant="outlined" className="flex-2">
-                            <PersonAdd />SIGN UP
-                        </Button>
-                    </div>
-                }
-                <LoginModal open={this.state.loginModal}/>
                 </div>
             </div>
       );

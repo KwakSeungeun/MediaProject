@@ -1,4 +1,6 @@
 const jwt = require('jsonwebtoken');
+const axios = require('axios');
+
 const authMiddleware = (req, res, next) => {
     const token = req.headers['x-access-token'] || req.query.token;
     console.log("**MIDDLEWARE**\n\n", token);
@@ -26,4 +28,6 @@ const authMiddleware = (req, res, next) => {
     });
 };
 
+const keystoneAuth = (req, res, next) => {
+}
 module.exports = authMiddleware;

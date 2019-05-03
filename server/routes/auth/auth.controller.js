@@ -1,4 +1,4 @@
-const User = require('../../models/user');
+const User = require('../../models').User;
 const jwt = require('jsonwebtoken');
 const axios = require('axios');
 const cloud = require('../../config/cloud.config');
@@ -31,6 +31,7 @@ exports.register = (req, res, next) => {
                         }
                     }
                 }
+                // keystone user 생성
                 axios.post(`${cloud.uri}/v3/users`, new_user, {
                     headers : {
                         'Content-Type': 'application/json',

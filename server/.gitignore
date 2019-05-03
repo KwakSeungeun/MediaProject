@@ -1,3 +1,5 @@
-/config/jwt.config.js
+/config/*
+
+/config/cloud.config.js
 
 /node_modules

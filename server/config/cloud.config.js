@@ -1,4 +1,4 @@
-exports.uri = 'http://13.125.245.16:5000'
+exports.uri = 'http://54.180.113.25:5000'
 
 exports.admin_info = { 
     "auth": {

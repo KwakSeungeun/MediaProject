@@ -1,15 +1,15 @@
 module.exports = (sequelize, DataTypes) => {
-    return sequelize.define('Users', {
+    return sequelize.define('Files', {
         _id:{
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true
         },
-        email:{
-            type: DataTypes.STRING,
+        dir_id:{
+            type: DataTypes.INTEGER,
             allowNull: false
         },
-        pw:{
+        url:{
             type: DataTypes.STRING,
             allowNull: false
         }

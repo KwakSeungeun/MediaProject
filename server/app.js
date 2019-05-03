@@ -11,10 +11,14 @@ const authRouter = require('./routes/auth');
 const filesRouter = require('./routes/files');
 const searchRouter = require('./routes/search');
 
-var app = express();
+const app = express();
 
 const jwt_config = require('./config/jwt.config');
-app.set('jwt-secret', jwt_config.secret)
+app.set('jwt-secret', jwt_config.secret);
+
+// sequelize에서 작성된 모델을 기반으로 실제 데이터베이스에서 생성
+const sequelize = require('./models').sequelize;
+sequelize.sync();
 
 app.use(cors());
 app.use(logger('dev'));

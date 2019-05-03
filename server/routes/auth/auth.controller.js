@@ -1,4 +1,5 @@
 const User = require('../../models').User;
+const Directory = require('../../models').Directory;
 const jwt = require('jsonwebtoken');
 const axios = require('axios');
 const cloud = require('../../config/cloud.config');
@@ -15,47 +16,39 @@ exports.register = (req, res, next) => {
         }
     }).spread((user, created)=>{
         if(created) {
-            axios.post(`${cloud.uri}/v3/auth/tokens`, cloud.admin_info)
-            .then(result =>{
-                let token = result.headers['x-subject-token'];
-                let new_user = {
-                    "user": {
-                        "default_project_id": `${cloud.default_project_id}`,
-                        "domain_id": "default",
-                        "enabled": true,
-                        "name": name,
-                        "password": pw,
-                        "email": email,
-                        "options": {
-                            "ignore_password_expiry": true
-                        }
-                    }
-                }
-                // keystone user 생성
-                axios.post(`${cloud.uri}/v3/users`, new_user, {
-                    headers : {
-                        'Content-Type': 'application/json',
-                        "X-Auth-Token" : `${token}`
-                    }
-                }).then(result =>{
-                    res.json({
-                        message: "success create user",
-                        success : true
-                    });
-                }).catch(err=>{
-                    console.log("ERR : ", err);
-                    res.status(500).json({
-                        message: 'Unable create user in cloud',
-                        success : false
-                    });
+            Directory.create({
+                pid : 0,
+                level : 0,
+                name : 'root',
+                user_id : user._id
+            }).then(()=>{
+                res.json({
+                    message : "success sign up!",
+                    success : true
                 });
             }).catch(err=>{
-                console.log('Unable get tokens : ', err);
                 res.status(500).json({
-                    message: 'Unable get tokens',
+                    message : "fail create directory\n"+err.message,
                     success : false
                 });
             });
+            // keystone token 받아오는 코드!!!
+            // axios.post(`${cloud.uri}/v3/auth/tokens`, cloud.admin_info)
+            // .then(result =>{
+            //     let token = result.headers['x-subject-token'];
+            //     let new_user = {
+            //         "user": {
+            //             "default_project_id": `${cloud.default_project_id}`,
+            //             "domain_id": "default",
+            //             "enabled": true,
+            //             "name": name,
+            //             "password": pw,
+            //             "email": email,
+            //             "options": {
+            //                 "ignore_password_expiry": true
+            //             }
+            //         }
+            //     }
         }
         else {
             msg = email + ' is alrady exist';

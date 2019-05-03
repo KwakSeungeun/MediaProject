@@ -1,8 +1,4 @@
-const path = require('path');
 const Sequelize = require('sequelize');
-
-const env = process.env.NODE_ENV || 'development';
-// const config = require(path.join(__dirname, '..', 'config', 'db.config.json'))[env]; //mac과 호환
 const config = require('../config/db.config.json');
 const db = {};
 
@@ -17,6 +13,11 @@ db.Directory = require('./directory')(sequelize, Sequelize);
 db.Files = require('./file')(sequelize, Sequelize);
 
 //모델간의 관계를 정의
-// db.User.hasMany(db.Directory,{ foreignKey: 'user_id' });
+db.User.hasMany(db.Directory, { foreignKey: 'user_id', sourceKey:'_id' });
+db.Directory.belongsTo(db.User, { foreignKey: 'user_id', targetKey: '_id' });
+
+db.Directory.hasMany(db.Files, { foreignKey: 'dir_id', sourceKey: '_id' });
+db.Files.belongsTo(db.Directory, { foreignKey: 'dir_id', targetKey: '_id' });
+
 
 module.exports = db;

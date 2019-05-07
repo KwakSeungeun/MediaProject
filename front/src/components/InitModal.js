@@ -14,7 +14,7 @@ class InitModal extends Component {
   constructor(props){
     super(props);
     this.state={
-      selectedLogin : false, 
+      selectedLogin : true, 
       open: true
     };
   }
@@ -146,6 +146,8 @@ class SignUpBox extends Component {
       },
       checkpw: '',
       isErr : true,
+      isValidEmail : false, // 중복확인 결과
+      checkEmail : false //중복확인 했는지 여부
     };
   }
   
@@ -167,9 +169,25 @@ class SignUpBox extends Component {
     }
   }
 
+  onCheckEmail = async()=>{
+    this.setState({checkEmail : true});
+    await axios.post(`${config.serverUri}/auth/check/vaildemail`, {
+      email : this.state.user.email
+    }).then(async(res) => {
+      console.log("RES : ",res);
+      if(res.data.count == 0) await this.setState({isValidEmail : true});
+    }).catch(err => {
+      console.log("server err : ", err.response);
+    })
+  }
+
   onSubmit = async(e) => {
     if(this.state.user.email=='' || this.state.user.name=='' ||this.state.user.pw==''||this.state.checkpw==''){
       alert('빈칸을 모두 채워 주세요!');
+      return;
+    }
+    if(!this.state.isValidEmail){
+      alert('이메일 중복 확인');
       return;
     }
     if(this.state.isErr){
@@ -199,20 +217,33 @@ class SignUpBox extends Component {
     return(
       <div className = "inner-container">
             <form>
+              <div className="row-container" style={{margin: "0px", width: "100%"}}>
+                  <TextField
+                      fullWidth={true}
+                      label="아이디"
+                      type="email"
+                      margin="normal"
+                      variant="outlined"
+                      className="flex-6"
+                      required={true}
+                      onChange={this.handleChange('email')}/>
+                  <Button className="flex-1" variant="contained" onClick={this.onCheckEmail}
+                  style={{margin : "0 0 0 16px", height: "100%"}}>중복확인</Button>
+                </div> 
+                {
+                  this.state.checkEmail?
+                    this.state.isValidEmail?
+                    <p style={{color : "blue", fontSize: "14px"}}>사용 가능한 이메일</p> 
+                    : <p style={{color : "red", fontSize: "14px"}}>이미 존재하는 이메일</p>
+                  :<div/>
+                }
                 <TextField
                   fullWidth={true}
                   label="이름"
                   type="text"
                   margin="normal"
                   variant="outlined"
-                  onChange={this.handleChange('name')}/>   
-                <TextField
-                    fullWidth={true}
-                    label="아이디"
-                    type="email"
-                    margin="normal"
-                    variant="outlined"
-                    onChange={this.handleChange('email')}/>
+                  onChange={this.handleChange('name')}/>  
                 <TextField
                   fullWidth={true}
                   label="비밀번호"
@@ -229,12 +260,12 @@ class SignUpBox extends Component {
                     onChange={this.handleChange('checkpw')}/>
                 { this.state.checkpw != ''?
                     this.state.isErr ? 
-                    <p style={{color : "red", fontSize: "12px"}}>일치하지 않습니다.</p> 
-                    : <p style={{color : "blue", fontSize: "10px"}}>일치합니다.</p>
+                    <p style={{color : "red", fontSize: "14px"}}>일치하지 않습니다.</p> 
+                    : <p style={{color : "blue", fontSize: "14px"}}>일치합니다.</p>
                   :<div/>
                 }
             </form>     
-            <Button className ="align-right" onClick={this.onSubmit} variant="outlined">회원가입</Button>
+            <Button className ="align-right" onClick={this.onSubmit} variant="contained">회원가입</Button>
         </div>
     );
   }

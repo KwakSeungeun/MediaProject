@@ -4,6 +4,7 @@ const auth_middleware = require('../middlewares/auth.check');
 
 router.post('/register', controller.register);
 router.post('/login', controller.login);
+router.post('/check/vaildemail', controller.checkValidation);
 router.get('/check', auth_middleware);
 router.get('/check', controller.check);
 

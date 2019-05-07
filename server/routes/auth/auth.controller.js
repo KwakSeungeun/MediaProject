@@ -4,67 +4,58 @@ const jwt = require('jsonwebtoken');
 const axios = require('axios');
 const cloud = require('../../config/cloud.config');
 
-exports.register = (req, res, next) => {
-    const { email, pw, name } = req.body;
-    let msg = '';
-    
-    User.findOrCreate({
-        where: { email : email },
-        defaults:{
-            email: email,
-            pw : pw,
-            name : name
-        }
-    }).spread((user, created)=>{
-        if(created) {
-            Directory.create({
-                pid : 0,
-                level : 0,
-                name : 'root',
-                user_id : user._id
-            }).then(()=>{
-                res.json({
-                    message : "success sign up!",
-                    success : true
-                });
-            }).catch(err=>{
-                res.status(500).json({
-                    message : "fail create directory\n"+err.message,
-                    success : false
-                });
-            });
-            // keystone token 받아오는 코드!!!
-            // axios.post(`${cloud.uri}/v3/auth/tokens`, cloud.admin_info)
-            // .then(result =>{
-            //     let token = result.headers['x-subject-token'];
-            //     let new_user = {
-            //         "user": {
-            //             "default_project_id": `${cloud.default_project_id}`,
-            //             "domain_id": "default",
-            //             "enabled": true,
-            //             "name": name,
-            //             "password": pw,
-            //             "email": email,
-            //             "options": {
-            //                 "ignore_password_expiry": true
-            //             }
-            //         }
-            //     }
-        }
-        else {
-            msg = email + ' is alrady exist';
-            res.status(500).json({
-                message : msg,
-                success : false
-            });
-        }
-    }).catch(err =>{
+exports.checkValidation = (req, res) => {
+    const email = req.body.email;
+    User.count({
+        where : {email : email}
+    }).then(result => {
+        res.json({
+            count : result
+        })
+    }).catch(err => {
         res.status(500).json({
-            message : "already exist user",
+            message : err.message,
+            success: false
+        });
+    });
+}
+
+exports.register = (req, res)=>{
+    const { email, pw, name } = req.body;
+    User.create({
+        email: email,
+        pw : pw,
+        name : name
+    }).then(()=>{
+        res.json({
+            message: "Success signup",
+            success: true
+        });
+    }).catch(err=>{
+        res.status(500).json({
+            message: err.message,
             success : false
         });
     });
 }
+
+// keystone token 받아오는 코드!!!
+// axios.post(`${cloud.uri}/v3/auth/tokens`, cloud.admin_info)
+// .then(result =>{
+//     let token = result.headers['x-subject-token'];
+//     let new_user = {
+//         "user": {
+//             "default_project_id": `${cloud.default_project_id}`,
+//             "domain_id": "default",
+//             "enabled": true,
+//             "name": name,
+//             "password": pw,
+//             "email": email,
+//             "options": {
+//                 "ignore_password_expiry": true
+//             }
+//         }
+//     }
 
 exports.login  = (req, res, next) => {
     const { email, pw } = req.body

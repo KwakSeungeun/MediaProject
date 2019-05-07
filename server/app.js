@@ -48,4 +48,9 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+//nodemon 작동 위해
+app.listen(8080, function(){
+  console.log("info",'Server is running at port : ' + 3000);
+});
+
 module.exports = app;

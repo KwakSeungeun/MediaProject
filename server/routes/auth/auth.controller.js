@@ -12,7 +12,8 @@ exports.register = (req, res, next) => {
         where: { email : email },
         defaults:{
             email: email,
-            pw : pw
+            pw : pw,
+            name : name
         }
     }).spread((user, created)=>{
         if(created) {
@@ -59,7 +60,7 @@ exports.register = (req, res, next) => {
         }
     }).catch(err =>{
         res.status(500).json({
-            message : err.message,
+            message : "already exist user",
             success : false
         });
     });

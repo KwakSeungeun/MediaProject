@@ -26,10 +26,22 @@ exports.register = (req, res)=>{
         email: email,
         pw : pw,
         name : name
-    }).then(()=>{
-        res.json({
-            message: "Success signup",
-            success: true
+    }).then((user)=>{
+        Directory.create({
+            pid : 0,
+            level : 0,
+            name : 'root',
+            user_id : user._id
+        }).then(()=>{
+            res.json({
+                message : "success sign up!",
+                success : true
+            });
+        }).catch(err=>{
+            res.status(500).json({
+                message : "fail create directory\n"+err.message,
+                success : false
+            });
         });
     }).catch(err=>{
         res.status(500).json({

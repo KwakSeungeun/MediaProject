@@ -207,7 +207,9 @@ class SignUpBox extends Component {
         isErr : true,
       });
       alert("회원가입 성공! 로그인 해주세요!");
-      await this.props.selectedLogin(true);
+      // 부모가 props로 함수를 보내준 다음 자식은 이 함수를 사용해서 부모의 데이터 update
+      // 자식컴포넌트가 부모컴포넌트로 직접적으로 변경이 불가능하기 떄문에 함수 사용
+      await this.props.selectedLogin(true); 
     }).catch(err => {
       alert("서버문제");
     });

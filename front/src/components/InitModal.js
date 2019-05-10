@@ -10,7 +10,7 @@ import Person from '@material-ui/icons/Person';
 import PersonAdd from '@material-ui/icons/PersonAdd';
 import Divider from '@material-ui/core/Divider';
 import { connect } from 'react-redux';
-import { setUser } from '../actions';
+import { setUser, setDir } from '../actions';
 
 class InitModal extends Component {
   constructor(props){
@@ -57,7 +57,6 @@ class InitModal extends Component {
               </div>
               <Divider style={{marginTop : "16px"}} />
               <DialogContent>
-                  {/* 로그인 또는 회원가입 */}
                   {
                     this.state.selectedLogin?
                     (<LoginBox close={this.onClose}/>)
@@ -111,10 +110,11 @@ class LoginBox extends Component {
         alert("로그인 성공!");
         this.props.close();
         this.props.dispatch(setUser(user)); //store로 dispatch
+        this.props.dispatch(setDir(res.data.dir));
       }
     }).catch(err => {
       console.log("ERR:", err.response);
-      if(err.response.status===500 && !err.response.data.success){
+      if(err.response && err.response.status===500 && !err.response.data.success){
         alert('아이디 또는 비밀번호가 틀렸습니다.');
         this.setState({ pw: '' });
       }

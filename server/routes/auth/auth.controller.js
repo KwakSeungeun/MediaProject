@@ -74,9 +74,11 @@ exports.login  = (req, res, next) => {
     const secret = req.app.get('jwt-secret');
     
     User.findOne({
-        where : { email : email }
+        where : { email : email },
+        include: { model : Directory } // left join
     }).then(user=>{
         // check user
+        // console.log("user : ", user.Directories);
         if(!user){
             res.status(500).json({
                 message : "not found user",
@@ -107,6 +109,7 @@ exports.login  = (req, res, next) => {
                         message : "success login",
                         token : token,
                         user_name : user.name,
+                        dir : user.Directories,
                         success : true
                     });
                 }).catch(err=>{

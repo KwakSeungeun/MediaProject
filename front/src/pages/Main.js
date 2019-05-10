@@ -3,6 +3,7 @@ import '../index.css'
 import SideBar from '../components/SideBar'
 import TopBar from '../components/TopBar'
 import InitModal from '../components/InitModal';
+import MainContents from '../components/MainContents';
 import { connect } from 'react-redux';
 
 class Main extends Component {
@@ -13,8 +14,8 @@ class Main extends Component {
         <div className="top-container"><TopBar></TopBar></div>
         <div className="main-container">
           <div className="side-container"><SideBar></SideBar></div>
-          <div className="contents-container">Contents-container
-          {/* 로그인한 유저 : {this.props.loggedUser} */}
+          <div className="contents-container">
+            <MainContents loggedUser={this.props.loggedUser}/>
           </div>
         </div>
         <InitModal/>

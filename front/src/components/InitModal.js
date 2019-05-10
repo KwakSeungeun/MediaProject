@@ -23,6 +23,10 @@ class InitModal extends Component {
     this.setState({selectedLogin : data});
   }
 
+  onClose = ()=>{
+    this.setState({open : false});
+  }
+
   onLogin = ()=>{
     this.setState({selectedLogin : true});
   }
@@ -55,7 +59,7 @@ class InitModal extends Component {
                   {/* 로그인 또는 회원가입 */}
                   {
                     this.state.selectedLogin?
-                    (<LoginBox/>)
+                    (<LoginBox close={this.onClose}/>)
                     :(<SignUpBox selectedLogin={this.changeSelected}/>)
                   }
               </DialogContent>
@@ -94,13 +98,20 @@ class LoginBox extends Component {
     }).then(async(res) =>{
       if(res.status===200 && res.data.success){
         // web storage에 token 저장하면 자동로그인 가능
-        // redux사용해서 User정보 넣기
+        let user = {
+          email : this.state.user,
+          pw : this.state.pw,
+          name : res.data.user_name,
+          token : res.data.token
+        }
         await this.setState({ 
-          open : false,
           id : '',
           pw: '' 
         });
         alert("로그인 성공!");
+        this.props.close();
+        // redux store에 user 정보 저장
+        return user;
       }
     }).catch(err => {
       console.log("ERR:", err.response);
@@ -135,6 +146,14 @@ class LoginBox extends Component {
       )
     }  
   }
+
+// let mapDispatchToProps = (dispatch) => {
+//     return {
+//         onLogin: (value) => dispatch(setUser(value))
+//     };
+// }
+
+// LoginBox = connect(undefined, mapDispatchToProps)(LoginBox);
 
 class SignUpBox extends Component {
   constructor(props){

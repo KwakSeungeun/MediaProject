@@ -106,6 +106,7 @@ exports.login  = (req, res, next) => {
                     res.json({
                         message : "success login",
                         token : token,
+                        user_name : user.name,
                         success : true
                     });
                 }).catch(err=>{

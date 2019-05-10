@@ -9,7 +9,6 @@ import config from '../config/config';
 import Person from '@material-ui/icons/Person';
 import PersonAdd from '@material-ui/icons/PersonAdd';
 import Divider from '@material-ui/core/Divider';
-import { connect } from 'react-redux';
 
 class InitModal extends Component {
   constructor(props){
@@ -292,14 +291,4 @@ class SignUpBox extends Component {
     );
   }
 }
-
-// redux store와 연결
-let mapStateToProps = (state) => {
-  console.log("logged user! : ", state.loggedUser);
-  return {
-      value: state.loggedUser
-  };
-}
-
-InitModal = connect(mapStateToProps)(InitModal);
 export default InitModal;

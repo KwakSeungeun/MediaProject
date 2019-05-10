@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import './Main.css'
+import '../index.css'
 import SideBar from '../components/SideBar'
 import TopBar from '../components/TopBar'
 import InitModal from '../components/InitModal';
+import { connect } from 'react-redux';
 
 class Main extends Component {
   render() {
@@ -18,5 +19,14 @@ class Main extends Component {
     );
   }
 }
+
+let mapStateToProps = (state) => {
+  console.log("logged user! : ", state.loggedUser);
+  return {
+      value: state.loggedUser
+  };
+}
+
+Main = connect(mapStateToProps)(Main);
 
 export default Main;

@@ -9,6 +9,8 @@ import config from '../config/config';
 import Person from '@material-ui/icons/Person';
 import PersonAdd from '@material-ui/icons/PersonAdd';
 import Divider from '@material-ui/core/Divider';
+import { connect } from 'react-redux';
+import { setUser } from '../actions';
 
 class InitModal extends Component {
   constructor(props){
@@ -73,7 +75,7 @@ class LoginBox extends Component {
   constructor(props){
     super(props);
     this.state = {
-      id: 'aaaaaaaas',
+      id: '',
       pw: '',
     };
   }
@@ -85,7 +87,6 @@ class LoginBox extends Component {
   }
 
   onLogin = async() => {
-    console.log('ID : ',this.state.id, '\nPW : ',this.state.pw);
     if(this.state.id==='' || this.state.pw===''){
       alert('빈칸을 모두 채워 주세요!');
       return;
@@ -98,7 +99,7 @@ class LoginBox extends Component {
       if(res.status===200 && res.data.success){
         // web storage에 token 저장하면 자동로그인 가능
         let user = {
-          email : this.state.user,
+          email : this.state.id,
           pw : this.state.pw,
           name : res.data.user_name,
           token : res.data.token
@@ -109,8 +110,7 @@ class LoginBox extends Component {
         });
         alert("로그인 성공!");
         this.props.close();
-        // redux store에 user 정보 저장
-        return user;
+        this.props.dispatch(setUser(user)); //store로 dispatch
       }
     }).catch(err => {
       console.log("ERR:", err.response);
@@ -147,12 +147,14 @@ class LoginBox extends Component {
   }
 
 // let mapDispatchToProps = (dispatch) => {
+//     console.log('dispatch : ', loggedUser);
 //     return {
-//         onLogin: (value) => dispatch(setUser(value))
+//       setUser: (loggedUser) => dispatch(setUser(loggedUser)),
 //     };
-// }
+// };
 
-// LoginBox = connect(undefined, mapDispatchToProps)(LoginBox);
+// connect() : store와 연결해주는 함수
+LoginBox = connect()(LoginBox); 
 
 class SignUpBox extends Component {
   constructor(props){

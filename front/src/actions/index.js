@@ -2,6 +2,7 @@
 export const SET_USER = 'SET_USER';
 
 export function setUser(value){
+    console.log("ACTION : ",value);
     return{
         type: SET_USER,
         user: value

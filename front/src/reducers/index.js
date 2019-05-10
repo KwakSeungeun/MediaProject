@@ -5,11 +5,8 @@ import { combineReducers } from 'redux';
 const loggedUser = (state = null, action) =>{
     switch(action.type){
         case SET_USER:
-            return Object.assign({}, state, {
-                email : state.email,
-                pw : state.pw,
-                name : state.name
-            });
+            console.log("REDUCER", action.user);
+            return Object.assign({}, state, action.user);
         default:
             return state;
     }

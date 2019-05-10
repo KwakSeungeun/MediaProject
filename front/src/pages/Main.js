@@ -7,12 +7,15 @@ import { connect } from 'react-redux';
 
 class Main extends Component {
   render() {
+    console.log("로그인 유저 : ", this.props.loggedUser);
     return (
       <div className="main">
         <div className="top-container"><TopBar></TopBar></div>
         <div className="main-container">
           <div className="side-container"><SideBar></SideBar></div>
-          <div className="contents-container">Contents-container</div>
+          <div className="contents-container">Contents-container
+          {/* 로그인한 유저 : {this.props.loggedUser} */}
+          </div>
         </div>
         <InitModal/>
       </div>
@@ -21,9 +24,8 @@ class Main extends Component {
 }
 
 let mapStateToProps = (state) => {
-  console.log("logged user! : ", state.loggedUser);
   return {
-      value: state.loggedUser
+      loggedUser: state.loggedUser //현재 component의 props에 저장
   };
 }
 

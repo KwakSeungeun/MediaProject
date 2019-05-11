@@ -1,15 +1,20 @@
 import React, { Component } from 'react';
 import '../index.css'
 import 'filepond/dist/filepond.min.css';
+import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
-import {FilePond} from 'react-filepond';
+import {FilePond, registerPlugin } from 'react-filepond';
+import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
+import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import config from '../config/config.js'
 import axios from 'axios';
+
+registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
 class MainConents extends Component {
     constructor(props){

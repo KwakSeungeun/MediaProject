@@ -8,6 +8,8 @@
     "axios": "^0.18.0",
     "crypto-js": "^3.1.9-1",
     "filepond": "^4.4.5",
+    "filepond-plugin-image-exif-orientation": "^1.0.6",
+    "filepond-plugin-image-preview": "^4.1.1",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
     "react-filepond": "^7.0.1",

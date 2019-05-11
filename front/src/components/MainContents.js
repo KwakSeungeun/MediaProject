@@ -40,9 +40,9 @@ class MainConents extends Component {
 
     onClose= ()=>{
         this.setState({
-            ...this.state,
             openFolderModal : false,
-            openFileModal : false
+            openFileModal : false,
+            uploadFiles : []
         });
     }
 
@@ -56,7 +56,7 @@ class MainConents extends Component {
         });
         this.state.uploadFiles.map(file=>{
             console.log("업로드할 file : ", file.filename);
-            axios.put(`${config.cloudUri}/v1/admin/test/${file.filename}`,{
+            axios.put(`/v1/admin/test/${file.filename}`,{ //package.json proxy 설정으로 cors문제 해결
                 headers : {
                     "X-Auth-Token" : `${token}`,
                     'Access-Control-Allow-Origin': "*", 
@@ -79,6 +79,10 @@ class MainConents extends Component {
         await this.setState({
             uploadFiles : this.state.uploadFiles.concat(file)
         });
+    }
+
+    handleRemoveFile = (file)=>{
+        
     }
 
     render() {
@@ -104,6 +108,7 @@ class MainConents extends Component {
                 </div>
                 <FilePond instantUpload={false} allowMultiple={true}
                     onaddfile={this.handlePondFile}
+                    onremovefile={this.handleRemoveFile}
                 />
                 <Button variant="contained" onClick={this.addFiles} style={{width : "100%"}}>파일추가</Button>
             </Dialog>

@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import '../index.css'
+import 'filepond/dist/filepond.min.css';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+import {FilePond} from 'react-filepond';
+import config from '../config/config.js'
 
 class MainConents extends Component {
     constructor(props){
@@ -33,11 +36,10 @@ class MainConents extends Component {
     return (
         <div  style={{background: "white"}}>
         {/* 상단 메뉴 */}
-            <div className="row-container" style={{width: "50%"}}>
-                <Button variant="contained" onClick={this.addDir} className="flex-1">폴더추가</Button>
-                <Button variant="contained" onClick={this.addFiles} 
-                    className="flex-1" style={{marginLeft: "16px"}}>파일추가</Button>
+            <div className="row-container" style={{width: "100%"}}>
+                <Button variant="contained" onClick={this.addDir} style={{width: "50%"}}>폴더추가</Button>
             </div>
+            <FilePond instantUpload={false} server={config.serverUri+"/files/upload"} allowMultiple={true} name ={"images"}/>
             <AddFolderModal open={this.state.openFolderModal} close={this.onClose}/>
         </div>
     );

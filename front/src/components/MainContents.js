@@ -13,6 +13,8 @@ import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orien
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import config from '../config/config.js'
 import axios from 'axios';
+import _ from 'lodash';
+import { element } from 'prop-types';
 
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
@@ -71,18 +73,26 @@ class MainConents extends Component {
         })
     }
 
-    handlePondFile= async(error, file)=>{
+    handleAddFile= async(error, file)=>{
         if (error) {
-            console.log('Oh no');
+            alert("ERROR");
             return;
         }
         await this.setState({
             uploadFiles : this.state.uploadFiles.concat(file)
         });
+        console.log("현재 파일들 : ", this.state.uploadFiles);
     }
 
-    handleRemoveFile = (file)=>{
-        
+    handleRemoveFile = (error,file)=>{   
+        if (error) {
+            alert("ERROR");
+            return;
+        }
+        let temp = _.remove(this.state.uploadFiles, (element)=>{
+            return element.id != file.id;
+        });
+        this.setState({uploadFiles : temp});
     }
 
     render() {
@@ -107,7 +117,7 @@ class MainConents extends Component {
                     </IconButton>
                 </div>
                 <FilePond instantUpload={false} allowMultiple={true}
-                    onaddfile={this.handlePondFile}
+                    onaddfile={this.handleAddFile}
                     onremovefile={this.handleRemoveFile}
                 />
                 <Button variant="contained" onClick={this.addFiles} style={{width : "100%"}}>파일추가</Button>

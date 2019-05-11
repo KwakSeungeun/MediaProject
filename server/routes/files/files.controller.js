@@ -3,7 +3,8 @@ exports.getList = (req, res)=>{
 };
 
 exports.upload = (req, res) =>{
-  res.send('upload files!');
+  console.log("REQ : ",req);
+  res.json({result : 'upload files!'});
 }
 
 exports.download = (req, res)=>{

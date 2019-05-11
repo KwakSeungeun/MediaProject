@@ -4,6 +4,21 @@ const jwt = require('jsonwebtoken');
 const axios = require('axios');
 const cloud = require('../../config/cloud.config');
 
+exports.getKeystoneAuth = async(req, res)=>{
+    await axios.post(`${cloud.uri}/v3/auth/tokens`, cloud.admin_info)
+    .then(result =>{
+        let token = result.headers['x-subject-token'];
+        res.json({
+            message : "Success",
+            keystoneToken : token
+        });
+    }).catch(err=>{
+        res.status(500).json({
+            message : "Fail get keystone admin auth"+err.message,
+        });
+    })
+}
+
 exports.checkValidation = (req, res) => {
     const email = req.body.email;
     User.count({
@@ -51,23 +66,7 @@ exports.register = (req, res)=>{
     });
 }
 
-// keystone token 받아오는 코드!!!
-// axios.post(`${cloud.uri}/v3/auth/tokens`, cloud.admin_info)
-// .then(result =>{
-//     let token = result.headers['x-subject-token'];
-//     let new_user = {
-//         "user": {
-//             "default_project_id": `${cloud.default_project_id}`,
-//             "domain_id": "default",
-//             "enabled": true,
-//             "name": name,
-//             "password": pw,
-//             "email": email,
-//             "options": {
-//                 "ignore_password_expiry": true
-//             }
-//         }
-//     }
+
 
 exports.login  = (req, res, next) => {
     const { email, pw } = req.body

@@ -2,17 +2,27 @@
 import { SET_USER, SET_DIR } from '../actions';
 import { combineReducers } from 'redux';
 
-const loggedUser = (state = null, action) =>{
+const user = (state = null, action) =>{
     switch(action.type){
         case SET_USER:
             return Object.assign({}, state, action.user);
-        case SET_DIR:
-            return Object.assign({}, state, action.dir);
         default:
             return state;
     }
 }
 
-const cloudApp = combineReducers({loggedUser});
+const userDir = (state=null, action) => {
+    switch(action.type){
+        case SET_DIR:
+            return Object.assign({}, state, action.dir);
+        default:
+        return state;
+    }
+}
+
+const cloudApp = combineReducers({
+    user,
+    userDir
+});
 
 export default cloudApp;

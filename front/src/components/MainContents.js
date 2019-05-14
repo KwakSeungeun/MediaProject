@@ -135,14 +135,15 @@ class MainConents extends Component {
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >
-                <div className="row-container">
+                <div className="row-container" style={{height : "60px"}}>
                     <DialogTitle className='dialog-title'>폴더관리</DialogTitle>
                     <IconButton className='dialog-close' aria-label="Close" onClick={this.onClose}>
                         <CloseIcon />
                     </IconButton>
                 </div>
-                <DialogContent>
-                </DialogContent>
+                <div className="round-box">
+                    TODO:: 유저의 디렉토리 구조에 맞게 화면에 보여줌
+                </div>
                 <Button variant="outlined" onClick={this.addDir} style={{margin: "16px"}}>폴더추가</Button>
             </Dialog>
         </div>

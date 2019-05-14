@@ -100,3 +100,9 @@ img{
     float: right;
 }
 
+.round-box{
+  border-radius: 5px;
+  border: 2px solid grey;
+  margin : 16px;
+  padding: 8px;
+}

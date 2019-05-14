@@ -17,7 +17,7 @@ class InitModal extends Component {
     super(props);
     this.state={
       selectedLogin : true, 
-      open: false
+      open: true
     };
   }
   changeSelected = (data)=>{
@@ -162,7 +162,7 @@ class SignUpBox extends Component {
     this.state={
       user : {
         name: '',
-        email: '',
+        email: '', //id
         pw: ''
       },
       checkpw: '',
@@ -172,17 +172,24 @@ class SignUpBox extends Component {
     };
   }
   
-  handleChange = name => async(event) => {
-    if (name === 'checkpw'){
-      await this.setState({[name]: event.target.value})
+  //모달에서의 입력 처리
+  //item은 항목을 의미
+  handleChange = item => async(event) => {
+    if (item === 'email'){
+      if ([item] !== event.target.value)
+        this.setState({isValidEmail : false, checkEmail : false})
+    }
+    if (item === 'checkpw'){
+      await this.setState({[item]: event.target.value})
     } else {
       await this.setState({
         user:{
           ...this.state.user,
-          [name]: event.target.value
+          [item]: event.target.value
         }
       });
     }
+    //비밀번호 확인
     if(this.state.checkpw !== this.state.user.pw){
       this.setState({isErr : true});
     } else {
@@ -191,24 +198,29 @@ class SignUpBox extends Component {
   }
 
   onCheckEmail = async()=>{
+    if(this.state.user.email === '') 
+      {
+        alert('아이디를 입력하세요') 
+        return;
+      }
     this.setState({checkEmail : true});
     await axios.post(`${config.serverUri}/auth/check/vaildemail`, {
       email : this.state.user.email
     }).then(async(res) => {
       console.log("RES : ",res);
-      if(res.data.count == 0) await this.setState({isValidEmail : true});
+      if(res.data.count === 0) await this.setState({isValidEmail : true});
     }).catch(err => {
       console.log("server err : ", err.response);
     })
   }
 
   onSubmit = async(e) => {
-    if(this.state.user.email=='' || this.state.user.name=='' ||this.state.user.pw==''||this.state.checkpw==''){
-      alert('빈칸을 모두 채워 주세요!');
+    if(this.state.user.email==='' || this.state.user.name==='' ||this.state.user.pw===''||this.state.checkpw===''){
+      alert('빈칸을 모두 채워 주세요');
       return;
     }
     if(!this.state.isValidEmail){
-      alert('이메일 중복 확인');
+      alert('중복 확인을 해주세요');
       return;
     }
     if(this.state.isErr){
@@ -216,6 +228,7 @@ class SignUpBox extends Component {
       return;
     }
     e.preventDefault();
+    //서버를 통해서 sequelize로 디비에 추가 & openstack 계정 생성
     axios.post(`${config.serverUri}/auth/register`,this.state.user)
     .then(async(res) => {
       await this.setState({
@@ -256,8 +269,8 @@ class SignUpBox extends Component {
                 {
                   this.state.checkEmail?
                     this.state.isValidEmail?
-                    <p style={{color : "blue", fontSize: "14px"}}>사용 가능한 이메일</p> 
-                    : <p style={{color : "red", fontSize: "14px"}}>이미 존재하는 이메일</p>
+                    <p style={{color : "blue", fontSize: "14px"}}>사용 가능한 아이디</p> 
+                    : <p style={{color : "red", fontSize: "14px"}}>이미 존재하는 아이디</p>
                   :<div/>
                 }
                 <TextField

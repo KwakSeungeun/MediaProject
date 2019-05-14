@@ -5,6 +5,7 @@ const axios = require('axios');
 const cloud = require('../../config/cloud.config');
 
 exports.getKeystoneAuth = async(req, res)=>{
+    console.log('keystone auth 도입')
     await axios.post(`${cloud.uri}/v3/auth/tokens`, cloud.admin_info)
     .then(result =>{
         let token = result.headers['x-subject-token'];
@@ -36,7 +37,9 @@ exports.checkValidation = (req, res) => {
 }
 
 exports.register = (req, res)=>{
+    
     const { email, pw, name } = req.body;
+
     User.create({
         email: email,
         pw : pw,
@@ -48,25 +51,78 @@ exports.register = (req, res)=>{
             name : 'root',
             user_id : user._id
         }).then(()=>{
-            res.json({
-                message : "success sign up!",
-                success : true
-            });
-        }).catch(err=>{
+            //admin 토큰 발행
+            axios.post(`${cloud.uri}/v3/auth/tokens`, cloud.admin_info)
+            .then(result =>{
+
+                let admin_token = result.headers['x-subject-token'];
+                let new_user = {
+                    "user": {
+                        "default_project_id": `${cloud.user_project_id}`,
+                        "domain_id": "default",
+                        "enabled": true,
+                        "name": email, // 웹의 id를 openstack에서 name으로 
+                        "password": pw,
+                        "email": email,
+                        "options": {
+                            "ignore_password_expiry": true
+                        }
+                    }
+                }
+                // 유저 생성
+                axios.post(`${cloud.uri}/v3/users`, new_user, {
+                    headers : {
+                        'Content-Type': 'application/json',
+                        'X-Auth-Token' : `${admin_token}`
+                    }
+                }).then(response =>{
+
+                    let user_code = response.data.user.id;
+                    //role 할당
+                    axios.put(`${cloud.uri}/v3/projects/${cloud.user_project_id}/users/${user_code}/roles/${cloud.user_role}`,null, {
+                        headers : {
+                            'Content-Type': 'application/json',
+                            'X-Auth-Token' : `${admin_token}`
+                        }
+                    }).then(()=>{ //role 할당까지 성공, 회원가입 성공
+                        res.json({
+                            message:"success to assign role to user, success register user",
+                            success: true
+                        })
+                    }).catch(err=>{ //role 할당 실패
+                        console.log("ERR : ", err);
+                        res.status(500).json({
+                            message : 'assign role error, fail register user',
+                            success: false
+                        })
+                    })
+                }).catch(err=>{ //유저 생성 실패
+                    console.log("ERR : ", err);
+                    res.status(500).json({
+                        message : 'create user in openstack error, fail register user',
+                        success : false
+                    })
+                })
+            }).catch(err=>{ //토큰 발급 실패
+                console.log('Unable get tokens : ', err);
+                res.status(500).json({
+                    message: 'Unable get tokens',
+                    success : false
+                    });
+                })
+        }).catch(err=>{ //sequelize directory 생성 에러
             res.status(500).json({
-                message : "fail create directory\n"+err.message,
+                message: err.message,
                 success : false
             });
         });
-    }).catch(err=>{
+    }).catch(err=>{ //sequelize user 생성 에러
         res.status(500).json({
             message: err.message,
             success : false
-        });
-    });
+        })
+    })
 }
-
-
 
 exports.login  = (req, res, next) => {
     const { email, pw } = req.body

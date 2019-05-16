@@ -125,7 +125,7 @@ class MainConents extends Component {
                     onaddfile={this.handleAddFile}
                     onremovefile={this.handleRemoveFile}
                 />
-                <Button variant="contained" onClick={this.addFiles} style={{width : "100%"}}>파일추가</Button>
+                <Button variant="contained" onClick={this.addFiles} style={{width : "100%"}}>파일 업로드</Button>
             </Dialog>
             {/* 폴더 추가 모달 */}
             <Dialog
@@ -149,4 +149,5 @@ class MainConents extends Component {
     );
     }
 }
+
 export default MainConents;

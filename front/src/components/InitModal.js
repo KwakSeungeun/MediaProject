@@ -69,6 +69,8 @@ class InitModal extends Component {
   }
 }
 
+
+//@login
 class LoginBox extends Component {
 
   constructor(props){

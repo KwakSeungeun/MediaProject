@@ -5,7 +5,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import TextField from '@material-ui/core/TextField';
 // import SHA512  from 'crypt o-js/sha512';
 import axios from 'axios';
-import config from '../config/config';
+import config, { cloudUri } from '../config/config';
 import Person from '@material-ui/icons/Person';
 import PersonAdd from '@material-ui/icons/PersonAdd';
 import Divider from '@material-ui/core/Divider';
@@ -85,34 +85,37 @@ class LoginBox extends Component {
     })
   }
 
-  onLogin = async() => {
+  onLogin = async () => {
     if(this.state.id==='' || this.state.pw===''){
       alert('빈칸을 모두 채워 주세요!');
       return;
     }
     // 로그인 성공시
-    await axios.post(`${config.serverUri}/auth/login`, {
+      await axios.post(`${config.serverUri}/auth/login`, {
       email : this.state.id,
       pw : this.state.pw // crypto 사용한 개선 필요
-    }).then(async(res) =>{
+    }).then((res) =>{
+      console.log(res)
       if(res.status===200 && res.data.success){
-        // web storage에 token 저장하면 자동로그인 가능
-        let user = {
-          email : this.state.id,
-          pw : this.state.pw,
-          name : res.data.user_name,
-          token : res.data.token
-        }
-        await this.setState({ 
-          id : '',
-          pw: '' 
-        });
-        alert("로그인 성공!");
-        this.props.close();
-        this.props.dispatch(setUser(user)); //store로 dispatch
-        this.props.dispatch(setDir(res.data.dir));
-      }
-    }).catch(err => {
+            // web storage에 token 저장하면 자동로그인 가능
+            let user = {
+              email : this.state.id,
+              pw : this.state.pw,
+              name : res.data.user_name,
+              token : res.data.token,
+              os_token : res.data.os_token
+            }
+            console.log('jwt token : ' + user.token)
+            console.log('os token : ' + user.os_token)
+            this.setState({ 
+              id : '',
+              pw: '' 
+            });
+            alert("로그인 성공!");
+            this.props.close();
+            this.props.dispatch(setUser(user)); //store로 dispatch
+            this.props.dispatch(setDir(res.data.dir));
+      }}).catch(err => {
       console.log("ERR:", err.response);
       if(err.response && err.response.status===500 && !err.response.data.success){
         alert('아이디 또는 비밀번호가 틀렸습니다.');
@@ -156,6 +159,7 @@ class LoginBox extends Component {
 // connect() : store와 연결해주는 함수
 LoginBox = connect()(LoginBox); 
 
+//회원가입
 class SignUpBox extends Component {
   constructor(props){
     super(props);
@@ -294,7 +298,7 @@ class SignUpBox extends Component {
                     margin="normal"
                     variant="outlined"
                     onChange={this.handleChange('checkpw')}/>
-                { this.state.checkpw != ''?
+                { this.state.checkpw !== ''?
                     this.state.isErr ? 
                     <p style={{color : "red", fontSize: "14px"}}>일치하지 않습니다.</p> 
                     : <p style={{color : "blue", fontSize: "14px"}}>일치합니다.</p>

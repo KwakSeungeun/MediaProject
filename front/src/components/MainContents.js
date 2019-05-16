@@ -13,6 +13,7 @@ import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orien
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import config from '../config/config.js'
 import axios from 'axios';
+import _ from 'lodash';
 
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
@@ -48,20 +49,26 @@ class MainConents extends Component {
 
     addFiles= async()=>{
         let token = null;
-        await axios.get(`${config.serverUri}/auth/keystone`)
+        await axios.get(`${config.keystonUri}/v3/auth/tokens`, config.admin_info    )
         .then(res=>{
-            token = res.data.keystoneToken;
+            token = res.headers['x-subject-token'];
         }).catch(err=>{
             alert("서버 에러");
         });
+        console.log("TOKEN : ", token);
+        // swift 정보 받기는 성공, token의 문제
+        await axios.get(`${config.swiftUri}/info`)
+        .then(res=>{
+            console.log("res : ",res);
+        }).catch(err=>{
+            console.log("err :", err);
+        })
+
         this.state.uploadFiles.map(file=>{
-            console.log("업로드할 file : ", file.filename);
-            axios.put(`/v1/admin/test/${file.filename}`,{ //package.json proxy 설정으로 cors문제 해결
+            axios.put(`${config.swiftUri}/v1/admin/test/${file.filename}`,file,{ 
                 headers : {
+                    'Content-Type': "multipart/form-data",
                     "X-Auth-Token" : `${token}`,
-                    'Access-Control-Allow-Origin': "*", 
-                    'Access-Control-Allow-Methods':"PUT",
-                    'Access=Control-Allow-Headers': "x-requested-with"
                 }
             }).then(res=>{
                 console.log("res : ",res);
@@ -71,18 +78,26 @@ class MainConents extends Component {
         })
     }
 
-    handlePondFile= async(error, file)=>{
+    handleAddFile= async(error, file)=>{
         if (error) {
-            console.log('Oh no');
+            alert("ERROR");
             return;
         }
         await this.setState({
             uploadFiles : this.state.uploadFiles.concat(file)
         });
+        console.log("현재 파일들 : ", this.state.uploadFiles);
     }
 
-    handleRemoveFile = (file)=>{
-        
+    handleRemoveFile = (error,file)=>{   
+        if (error) {
+            alert("ERROR");
+            return;
+        }
+        let temp = _.remove(this.state.uploadFiles, (element)=>{
+            return element.id != file.id;
+        });
+        this.setState({uploadFiles : temp});
     }
 
     render() {
@@ -107,7 +122,7 @@ class MainConents extends Component {
                     </IconButton>
                 </div>
                 <FilePond instantUpload={false} allowMultiple={true}
-                    onaddfile={this.handlePondFile}
+                    onaddfile={this.handleAddFile}
                     onremovefile={this.handleRemoveFile}
                 />
                 <Button variant="contained" onClick={this.addFiles} style={{width : "100%"}}>파일추가</Button>

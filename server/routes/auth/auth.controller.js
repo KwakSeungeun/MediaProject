@@ -5,7 +5,6 @@ const axios = require('axios');
 const cloud = require('../../config/cloud.config');
 
 exports.getKeystoneAuth = async(req, res)=>{
-    console.log('keystone auth 도입')
     await axios.post(`${cloud.uri}/v3/auth/tokens`, cloud.admin_info)
     .then(result =>{
         let token = result.headers['x-subject-token'];
@@ -125,62 +124,88 @@ exports.register = (req, res)=>{
 }
 
 exports.login  = (req, res, next) => {
+    
     const { email, pw } = req.body
     const secret = req.app.get('jwt-secret');
-    
+
     User.findOne({
         where : { email : email },
-        include: { model : Directory } // left join
+        include: { model : Directory } //left join
     }).then(user=>{
         // check user
         // console.log("user : ", user.Directories);
-        if(!user){
+        if(!user || user.pw!=pw){
             res.status(500).json({
-                message : "not found user",
+                message : "invalid id or pw",
                 success : false
             });
-        } else {
-            // check password
-            if(user.pw != pw){
-                res.status(500).json({
-                    message : "incorrect pw",
-                    success : false
+        } else{ //유저 정보 확인됐을 때
+            new Promise((resolve, reject) =>{
+                jwt.sign({
+                    _id : user._id,
+                    email : user.email,
+                },
+                secret,
+                {
+                    expiresIn : '7d',
+                }, (err, token) => {
+                    if(err) reject(err);
+                    else resolve(token);
                 });
-            } else {
-                new Promise((resolve, reject) =>{
-                    jwt.sign({
-                        _id : user._id,
-                        email : user.email,
-                    },
-                    secret,
-                    {
-                        expiresIn : '7d',
-                    }, (err, token) => {
-                        if(err) reject(err);
-                        else resolve(token);
-                    });
-                }).then(token=>{
+            }).then(token=>{
+                axios.post(`${cloud.uri}/v3/auth/tokens`, {
+                    "auth": {
+                                "identity": {
+                                "methods": ["password"],
+                                "password": {
+                                    "user": {
+                                    "name": email,
+                                    "domain": { "name": "Default" },
+                                    "password": pw
+                                    }
+                                }
+                                },
+                                "scope": {
+                                "project": {
+                                    "name": "user_proj",
+                                    "domain": { "name": "Default" }
+                                    }   
+                                }
+                            }
+                }).then(result => {
+                    // 유저 정보와 토큰 넘김
+                    // let ostoken = result.headers['x-subject-token'];
+                    console.log('end keystone')
+                    console.log(result.headers['x-subject-token']);
                     res.json({
                         message : "success login",
                         token : token,
+                        os_token : result.headers['x-subject-token'],
                         user_name : user.name,
                         dir : user.Directories,
                         success : true
-                    });
+                    })
                 }).catch(err=>{
                     console.log(err);
                     res.status(500).json({
-                        message : "fail create token",
+                        message : "fail getting openstack token",
                         success : false
                     });
+                })
+            }).catch(err=>{
+                console.log(err);
+                res.status(500).json({
+                    message : "fail create token",
+                    success : false
                 });
-            }
+            });
         }
     }).catch(err=>{
         res.status(500).json({
             message : err.message
         })
-    });
+    })
+    console.log('server login end')
 }
 
 exports.check = (req, res, next) => {

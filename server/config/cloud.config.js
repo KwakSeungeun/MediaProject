@@ -1,4 +1,6 @@
 exports.uri = 'http://15.164.100.240:5000'
+exports.swiftUri = 'http://15.164.100.240:8080'
+exports.adminProjectId = 'AUTH_c0b8a4b703d94f0db5e9446472dd8432'
 
 exports.admin_info = { 
     "auth": {

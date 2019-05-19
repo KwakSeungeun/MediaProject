@@ -14,7 +14,6 @@ class Upload extends Component {
       uploading: false,
       uploadProgress: {},
       successfullUploaded: false,
-      // userInfo : this.props.userInfo
     };
   
 
@@ -75,14 +74,16 @@ class Upload extends Component {
         reject(req.response);
       });
       
-      const formData = new FormData(file);
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('user_info', JSON.stringify(this.props.userInfo));
       let files = {
         data : formData,
-        img_name : file.name,
+        file_name : file.name,
         user_info : this.props.userInfo
       };
 
-      axios.post(`${config.serverUri}/files/upload`, files)
+      axios.post(`${config.serverUri}/files/upload`, formData)
       .then((res)=>{
         console.log(res)
       })

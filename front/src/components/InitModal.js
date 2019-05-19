@@ -99,7 +99,6 @@ class LoginBox extends Component {
       email : this.state.id,
       pw : this.state.pw // crypto 사용한 개선 필요
     }).then((res) =>{
-      console.log(res)
       if(res.status===200 && res.data.success){
             // web storage에 token 저장하면 자동로그인 가능
             let user = {
@@ -109,8 +108,6 @@ class LoginBox extends Component {
               token : res.data.token,
               os_token : res.data.os_token
             }
-            console.log('jwt token : ' + user.token)
-            console.log('os token : ' + user.os_token)
             this.setState({ 
               id : '',
               pw: '' 
@@ -121,7 +118,6 @@ class LoginBox extends Component {
             // this.props.dispatch(setUser(user)); //store로 dispatch
             // this.props.dispatch(setDir(res.data.dir));
       }}).catch(err => {
-      console.log("ERR:", err.response);
       if(err.response && err.response.status===500 && !err.response.data.success){
         alert('아이디 또는 비밀번호가 틀렸습니다.');
         this.setState({ pw: '' });
@@ -215,7 +211,6 @@ class SignUpBox extends Component {
     await axios.post(`${config.serverUri}/auth/check/vaildemail`, {
       email : this.state.user.email
     }).then(async(res) => {
-      console.log("RES : ",res);
       if(res.data.count === 0) await this.setState({isValidEmail : true});
     }).catch(err => {
       console.log("server err : ", err.response);

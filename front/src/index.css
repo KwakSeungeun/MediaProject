@@ -135,6 +135,7 @@ img{
   align-items: flex-start;
   text-align: left;
   overflow: hidden;
+  padding : 32px;
 }
 
 .Content {

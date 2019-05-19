@@ -134,17 +134,9 @@ class Upload extends Component {
     }
   }
 
-  onClose = ()=>{
-    this.props.close();
-  }
-
   render() {
-    console.log("this is upload")
-    console.log(this.props.userInfo)
     return (
       <div className="Upload">
-        <span className="Title">Upload Files</span>
-        <button onClick={this.onClose}>닫기</button>
         <div className="Content">
           <div>
             <Dropzone

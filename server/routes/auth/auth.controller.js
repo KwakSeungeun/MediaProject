@@ -2,7 +2,7 @@ const User = require('../../models').User;
 const Directory = require('../../models').Directory;
 const jwt = require('jsonwebtoken');
 const axios = require('axios');
-const config = require('../../config/cloud.config');
+const cloud = require('../../config/cloud.config');
 
 exports.getKeystoneAuth = async(req, res)=>{
     await axios.post(`${cloud.keystoneUri}/v3/auth/tokens`, cloud.admin_info)
@@ -146,7 +146,6 @@ exports.login  = (req, res, next) => {
             message : err.message
         })
     })
-    console.log('server login end')
 }
 
 exports.check = (req, res, next) => {

@@ -7,8 +7,8 @@ exports.getList = (req, res)=>{
 
 exports.upload = (req, res) =>{
   console.log(req.body);
-  axios.put(`${cloud.uri}/`)
-  // res.send();
+  // axios.put(`${cloud.uri}/${req.body.user_info.id}/${req.body.img_name}`)
+  res.send();
 }
 
 exports.download = (req, res)=>{

@@ -75,9 +75,10 @@ class Upload extends Component {
         reject(req.response);
       });
       
-      
+      const formData = new FormData(file);
       let files = {
-        file : file,
+        data : formData,
+        img_name : file.name,
         user_info : this.props.userInfo
       };
 

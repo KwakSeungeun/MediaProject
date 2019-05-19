@@ -17,7 +17,7 @@ class InitModal extends Component {
     super(props);
     this.state={
       selectedLogin : true, 
-      open: true
+      open: false
     };
   }
   changeSelected = (data)=>{

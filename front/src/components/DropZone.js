@@ -60,7 +60,7 @@ class DropZone extends Component {
     render (){
         return (
             <div
-                className={`Dropzone ${this.state.hightlight ? "Highlight" : ""}`}
+                className="Dropzone"
                 onDragOver={this.onDragOver}
                 onDragLeave={this.onDragLeave}
                 onDrop={this.onDrop}
@@ -79,7 +79,7 @@ class DropZone extends Component {
                     className="Icon"
                     src="baseline-cloud_upload-24px.svg"
                 />
-                <span>Upload Files</span>
+                <span>파일 선택</span>
             </div>
         )
     }

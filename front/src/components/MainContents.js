@@ -42,7 +42,7 @@ class MainContents extends Component {
 
     render() {
     return (
-        <div  style={{background: "white"}}>
+        <div>
             <div className="row-container" style={{width: "50%"}}>
                 <Button variant="contained" onClick={this.openAddFolder} className="flex-1">폴더추가</Button>
                 <Button variant="contained" onClick={this.openAddFiles} 
@@ -56,7 +56,7 @@ class MainContents extends Component {
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description">
                 <div className="row-container">
-                    <DialogTitle className='dialog-title'>파일관리</DialogTitle>
+                    <DialogTitle className='dialog-title'>파일 추가</DialogTitle>
                     <IconButton className='dialog-close' aria-label="Close" onClick={this.onClose}>
                         <CloseIcon />
                     </IconButton>

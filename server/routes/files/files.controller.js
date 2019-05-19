@@ -1,6 +1,7 @@
 const axios = require('axios');
-const cloud = require('../../config/cloud.config');
+const config = require('../../config/cloud.config');
 const formidable = require('formidable')
+const _ = require('lodash');
 
 exports.getList = (req, res)=>{
   res.send('get files!');
@@ -13,12 +14,26 @@ exports.upload = (req, res) =>{
   form.keepExtensions = true;
 
   form.parse(req, function(err, fields, files) {
-     console.log('user_info: ', fields);
-     console.log('files', files);
+     let user = JSON.parse(fields.user_info);
 
+      _.forEach(files, (file)=>{
+        console.log(user.os_token)
+        axios.put(`${config.swiftUri}/v1/${config.adminProjectId}/${user.id}/${file.name}`, file, {
+          headers: {
+            "Content-Type" : 'text/html',
+            "X-Auth-Token" : `${user.os_token}`
+          }
+        }).then(res => {
+          console.log(res)
+          res.json(res);
+        }).catch(err => {
+          console.log(err)
+          res.status(500).json({
+            err : err.message
+          });
+        })
+      })
   })
-
-  res.send();
 }
 
 exports.download = (req, res)=>{

@@ -2,7 +2,7 @@ const User = require('../../models').User;
 const Directory = require('../../models').Directory;
 const jwt = require('jsonwebtoken');
 const axios = require('axios');
-const cloud = require('../../config/cloud.config');
+const config = require('../../config/cloud.config');
 
 exports.getKeystoneAuth = async(req, res)=>{
     await axios.post(`${cloud.uri}/v3/auth/tokens`, cloud.admin_info)
@@ -51,8 +51,9 @@ exports.register = (req, res)=>{
             user_id : user._id
         }).then(()=>{
             //admin 토큰 발행
-            axios.post(`${cloud.uri}/v3/auth/tokens`, cloud.admin_info)
+            axios.post(`${config.keystoneUri}/v3/auth/tokens`, cloud.admin_info)
             .then(result =>{
+                axios.put(`${config.swiftUri}/v1/${config.adminProjectId}/${email}`, )
 
                 let admin_token = result.headers['x-subject-token'];
                 let new_user = {

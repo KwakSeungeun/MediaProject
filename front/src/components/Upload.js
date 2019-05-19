@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import '../index.css'
 import Button from '@material-ui/core/Button';
-import Lightbox from 'react-images';
 import Dropzone from './DropZone.js'
 import Progress from './Progress.js'
 import axios from 'axios';

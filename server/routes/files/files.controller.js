@@ -1,7 +1,7 @@
 const axios = require('axios');
 const cloud = require('../../config/cloud.config');
 const formidable = require('formidable')
-// const util = require('util')
+
 exports.getList = (req, res)=>{
   res.send('get files!');
 };
@@ -17,7 +17,6 @@ exports.upload = (req, res) =>{
      console.log('user_info: ', fields);
      console.log('files', files);
 
-     
   })
 
   res.send();

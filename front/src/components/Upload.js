@@ -7,7 +7,8 @@ import axios from 'axios';
 import config from '../config/config.js';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { element } from 'prop-types';
+import { CircularProgressbar } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 
 class Upload extends Component {
   constructor(props) {
@@ -17,6 +18,7 @@ class Upload extends Component {
       uploading: false,
       uploadProgress: {},
       successfullUploaded: false,
+      percentage : 10,
     };
   
 
@@ -45,7 +47,9 @@ class Upload extends Component {
 
     axios.post(`${config.serverUri}/files/upload`, formData)
       .then((res)=>{
-        console.log(res)
+        console.log(res);
+        alert("업로드 완료!");
+        this.props.close();
       })
       .catch(err=>{
         console.log(err);
@@ -93,6 +97,7 @@ class Upload extends Component {
               </div>
             : null
           }
+          {/* <CircularProgressbar value={this.state.percentage} text={`${this.state.percentage}%`} /> */}
           <Button variant="outlined" onClick={this.uploadFiles} 
             style={{marginTop: "16px", width: "100%"}}>완료</Button>
         </div>

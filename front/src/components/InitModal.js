@@ -115,6 +115,7 @@ class LoginBox extends Component {
             alert("로그인 성공!");
             this.props.close();
             this.props.setUser(user);
+            console.log("토큰 : ", res.data.os_token);
             // this.props.dispatch(setUser(user)); //store로 dispatch
             // this.props.dispatch(setDir(res.data.dir));
       }}).catch(err => {

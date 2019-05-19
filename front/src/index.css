@@ -80,7 +80,7 @@ img{
   height: auto;
 }
 
-  .search{
+.search{
     height: 40px;
     padding: 0 30px 0 30px;
     margin: 0 10% 0 10%;
@@ -192,6 +192,7 @@ img{
   opacity: 0.3;
   height: 64px;
   width: 64px;
+  margin-right: 30px;
 }
 
 .FileInput {

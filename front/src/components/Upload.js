@@ -1,11 +1,13 @@
-import React, {Component} from 'react'
-import '../index.css'
+import React, {Component} from 'react';
+import '../index.css';
 import Button from '@material-ui/core/Button';
 import Dropzone from './DropZone.js'
 import Progress from './Progress.js'
 import axios from 'axios';
-import config from '../config/config.js'
-import { connect } from 'react-redux'
+import config from '../config/config.js';
+import { connect } from 'react-redux';
+import _ from 'lodash';
+import { element } from 'prop-types';
 
 class Upload extends Component {
   constructor(props) {
@@ -20,7 +22,6 @@ class Upload extends Component {
 
     this.onFilesAdded = this.onFilesAdded.bind(this);
     this.uploadFiles = this.uploadFiles.bind(this);
-    this.sendRequest = this.sendRequest.bind(this);
   }
 
   onFilesAdded(files) {
@@ -34,67 +35,21 @@ class Upload extends Component {
       alert("하나 이상의 파일을 선택해 주세요.");
       return;
     }
-    // this.setState({ uploadProgress: {}, uploading: true });
-    // const promises = [];
-    // this.state.files.forEach(file => {
-    //   promises.push(this.sendRequest(file));
-    // });
-    // try {
-    //   await Promise.all(promises);
 
-    //   this.setState({ successfullUploaded: true, uploading: false });
-    // } catch (e) {
-    //   // Not Production ready! Do some error handling here instead...
-    //   this.setState({ successfullUploaded: true, uploading: false });
-    // }
-  }
+    let formData = new FormData();
+    formData.append('user_info', JSON.stringify(this.props.userInfo));
+    
+    await _.forEach(this.state.files, async(file)=>{
+      await formData.append('file', file);
+    });
 
-  sendRequest(file) {
-    return new Promise(async(resolve, reject) => {
-      const req = new XMLHttpRequest();
-
-      req.upload.addEventListener("progress", event => {
-        if (event.lengthComputable) {
-          const copy = { ...this.state.uploadProgress };
-          copy[file.name] = {
-            state: "pending",
-            percentage: (event.loaded / event.total) * 100
-          };
-          this.setState({ uploadProgress: copy });
-        }
-      });
-
-      req.upload.addEventListener("load", event => {
-        const copy = { ...this.state.uploadProgress };
-        copy[file.name] = { state: "done", percentage: 100 };
-        this.setState({ uploadProgress: copy });
-        resolve(req.response);
-      });
-
-      req.upload.addEventListener("error", event => {
-        const copy = { ...this.state.uploadProgress };
-        copy[file.name] = { state: "error", percentage: 0 };
-        this.setState({ uploadProgress: copy });
-        reject(req.response);
-      });
-      
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('user_info', JSON.stringify(this.props.userInfo));
-      let files = {
-        data : formData,
-        file_name : file.name,
-        user_info : this.props.userInfo
-      };
-
-      axios.post(`${config.serverUri}/files/upload`, formData)
+    axios.post(`${config.serverUri}/files/upload`, formData)
       .then((res)=>{
         console.log(res)
       })
       .catch(err=>{
         console.log(err);
-      })
-    });
+      });
   }
 
   renderProgress(file) {

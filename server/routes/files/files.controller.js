@@ -11,7 +11,6 @@ exports.upload = (req, res) =>{
   form.multiples = true;
   form.encoding = 'utf-8';
   form.keepExtensions = true;
-  form.uploadDir = '/Users/17063/MediaProject/server/uploads';
 
   form.parse(req, function(err, fields, files) {
      console.log('user_info: ', fields);

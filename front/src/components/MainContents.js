@@ -8,22 +8,25 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
-import {FilePond, registerPlugin } from 'react-filepond';
-import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
-import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+// // import {FilePond, registerPlugin } from 'react-filepond';
+// import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
+// import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import config from '../config/config.js'
 import axios from 'axios';
 import _ from 'lodash';
+import Upload from './Upload.js'
+import {connect} from 'react-redux';
 
-registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
-class MainConents extends Component {
+// registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
+
+class MainContents extends Component {
     constructor(props){
         super(props);
         this.state = {
             openFolderModal: false,
             openFileModal : false,
-            uploadFiles : []
+            uploadFiles : [],
         };
     }
     addDir = ()=>{
@@ -49,7 +52,7 @@ class MainConents extends Component {
 
     addFiles= async()=>{
         let token = null;
-        await axios.get(`${config.keystonUri}/v3/auth/tokens`, config.admin_info    )
+        await axios.get(`${config.keystonUri}/v3/auth/tokens`, config.admin_info)
         .then(res=>{
             token = res.headers['x-subject-token'];
         }).catch(err=>{
@@ -95,12 +98,14 @@ class MainConents extends Component {
             return;
         }
         let temp = _.remove(this.state.uploadFiles, (element)=>{
-            return element.id != file.id;
+            return element.id !== file.id;
         });
         this.setState({uploadFiles : temp});
     }
 
     render() {
+        console.log("this is maincontents")
+        console.log(this.props.userInfo);
     return (
         <div  style={{background: "white"}}>
             <div className="row-container" style={{width: "50%"}}>
@@ -117,15 +122,16 @@ class MainConents extends Component {
                 aria-describedby="alert-dialog-description">
                 <div className="row-container">
                     <DialogTitle className='dialog-title'>파일관리</DialogTitle>
-                    <IconButton className='dialog-close' aria-label="Close" onClick={this.onClose}>
+                    {/* <IconButton className='dialog-close' aria-label="Close" onClick={this.onClose}>
                         <CloseIcon />
-                    </IconButton>
+                    </IconButton> */}
                 </div>
-                <FilePond instantUpload={false} allowMultiple={true}
+                    <Upload close={this.onClose} userInfo = {this.props.user}/>
+                {/* <FilePond instantUpload={false} allowMultiple={true}
                     onaddfile={this.handleAddFile}
                     onremovefile={this.handleRemoveFile}
-                />
-                <Button variant="contained" onClick={this.addFiles} style={{width : "100%"}}>파일 업로드</Button>
+                /> */}
+                {/* <Button variant="contained" onClick={this.addFiles} style={{width : "100%"}}>파일 업로드</Button> */}
             </Dialog>
             {/* 폴더 추가 모달 */}
             <Dialog
@@ -150,4 +156,12 @@ class MainConents extends Component {
     }
 }
 
-export default MainConents;
+// const mapStateToProps = (state) => {
+//     return {
+//         userInfo : state.user
+//     }
+// }
+
+// MainContents = connect(mapStateToProps)(MainContents)
+
+export default MainContents;

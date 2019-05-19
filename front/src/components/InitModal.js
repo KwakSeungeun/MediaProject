@@ -10,7 +10,7 @@ import Person from '@material-ui/icons/Person';
 import PersonAdd from '@material-ui/icons/PersonAdd';
 import Divider from '@material-ui/core/Divider';
 import { connect } from 'react-redux';
-import { setUser, setDir } from '../actions';
+import * as actions from '../actions';
 
 class InitModal extends Component {
   constructor(props){
@@ -78,6 +78,8 @@ class LoginBox extends Component {
     this.state = {
       id: '',
       pw: '',
+      // token: '',
+      // os_token: ''
     };
   }
 
@@ -101,9 +103,9 @@ class LoginBox extends Component {
       if(res.status===200 && res.data.success){
             // web storage에 token 저장하면 자동로그인 가능
             let user = {
-              email : this.state.id,
+              id : this.state.id,
               pw : this.state.pw,
-              name : res.data.user_name,
+              // name : res.data.user_name,
               token : res.data.token,
               os_token : res.data.os_token
             }
@@ -115,8 +117,9 @@ class LoginBox extends Component {
             });
             alert("로그인 성공!");
             this.props.close();
-            this.props.dispatch(setUser(user)); //store로 dispatch
-            this.props.dispatch(setDir(res.data.dir));
+            this.props.setUser(user);
+            // this.props.dispatch(setUser(user)); //store로 dispatch
+            // this.props.dispatch(setDir(res.data.dir));
       }}).catch(err => {
       console.log("ERR:", err.response);
       if(err.response && err.response.status===500 && !err.response.data.success){
@@ -151,15 +154,14 @@ class LoginBox extends Component {
     }  
   }
 
-// let mapDispatchToProps = (dispatch) => {
-//     console.log('dispatch : ', loggedUser);
-//     return {
-//       setUser: (loggedUser) => dispatch(setUser(loggedUser)),
-//     };
-// };
+const mapDispatchProps = (dispatch) => {
+    return {
+      setUser : (userInfo) => { dispatch(actions.setUser(userInfo))}
+    }
+  }
 
 // connect() : store와 연결해주는 함수
-LoginBox = connect()(LoginBox); 
+LoginBox = connect(undefined, mapDispatchProps)(LoginBox); 
 
 //회원가입
 class SignUpBox extends Component {

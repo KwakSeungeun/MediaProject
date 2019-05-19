@@ -4,16 +4,18 @@ import '../index.css'
 class DropZone extends Component {
     constructor(props) {
         super(props)
+        this.state = { highlight: false };
         this.fileInputRef = React.createRef();
-        this.openFileDialog = this.openFileDialog.bind(this)
+
+        this.openFileDialog = this.openFileDialog.bind(this);
         this.onFilesAdded = this.onFilesAdded.bind(this);
         this.onDragOver = this.onDragOver.bind(this);
         this.onDragLeave = this.onDragLeave.bind(this);
         this.onDrop = this.onDrop.bind(this);
     }
 
-    openFileDialog(){
-        if(this.props.disabled) return ;
+    openFileDialog() {
+        if (this.props.disabled) return;
         this.fileInputRef.current.click();
     }
 
@@ -28,27 +30,23 @@ class DropZone extends Component {
 
     onDragOver(evt) {
         evt.preventDefault();
-      
         if (this.props.disabled) return;
-      
-        this.setState({ hightlight: true });
+        this.setState({ highlight: true });
     }
 
     onDragLeave() {
-        this.setState({ hightlight: false });
+        this.setState({ highlight: false });
     }
 
     onDrop(event) {
         event.preventDefault();
-      
         if (this.props.disabled) return;
-      
         const files = event.dataTransfer.files;
         if (this.props.onFilesAdded) {
           const array = this.fileListToArray(files);
           this.props.onFilesAdded(array);
         }
-        this.setState({ hightlight: false });
+        this.setState({ highlight: false });
     }
     
     fileListToArray(list) {
@@ -57,19 +55,18 @@ class DropZone extends Component {
           array.push(list.item(i));
         }
         return array;
-      }
+    }
 
     render (){
         return (
-            <div className = {`DropZone ${this.state.hightlight ? "Highlight" : ""}`}
+            <div
+                className={`Dropzone ${this.state.hightlight ? "Highlight" : ""}`}
                 onDragOver={this.onDragOver}
                 onDragLeave={this.onDragLeave}
-                onDrop={this.onDrop} onClick={this.onFileDialog} style={{cursor: this.props.disabled?"default":"pointer"}}>
-                <img 
-                    alt="upload"
-                    className="Icon"
-                    src="../img/logo3.png"
-                />
+                onDrop={this.onDrop}
+                onClick={this.openFileDialog}
+                style={{ cursor: this.props.disabled ? "default" : "pointer" }}
+            >
                 <input 
                     ref={this.fileInputRef}
                     className="FileInput"
@@ -77,8 +74,15 @@ class DropZone extends Component {
                     multiple
                     onChange={this.onFilesAdded}
                 />
+                <img 
+                    alt="upload"
+                    className="Icon"
+                    src="baseline-cloud_upload-24px.svg"
+                />
                 <span>Upload Files</span>
             </div>
         )
     }
 }
+
+export default DropZone

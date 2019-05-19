@@ -14,27 +14,28 @@ exports.upload = (req, res) =>{
   form.multiples = true;
   form.keepExtensions = true;
 
-  form.parse(req, function(err, fields, files) {
+  form.parse(req, async function(err, fields, files) {
      let user = JSON.parse(fields.user_info);
 
-      _.forEach(files, (file)=>{
-        fs.readFile(file.path, (err, binaryData)=>{
-          axios.put(`${config.swiftUri}/v1/${config.adminProjectId}/${user.id}/${file.name}`, binaryData, {
+     await _.map(files.file, async(file)=>{
+       // temp에 저장되어 있는 데이터 읽기
+        return await fs.readFile(file.path, async(err, binaryData)=>{
+          // swift api를 이용해 읽어온 data 넘기기
+          return await axios.put(`${config.swiftUri}/v1/${config.adminProjectId}/${user.id}/${file.name}`, 
+          binaryData, {
             headers: {
               "Content-Type" : `${file.type}`,
               "X-Auth-Token" : `${user.os_token}`
             },
-          }).then(() => {
-            res.json({message : "success upload!"});
           }).catch(err => {
-            console.log(err)
             res.status(500).json({
               err : err.message
             });
-          })
-          
+          });
         })
-      })
+     })
+
+     res.json({message : "success upload files"});
   })
 }
 

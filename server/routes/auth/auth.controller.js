@@ -175,8 +175,8 @@ exports.login  = (req, res, next) => {
                 }).then(result => {
                     // 유저 정보와 토큰 넘김
                     // let ostoken = result.headers['x-subject-token'];
-                    console.log('end keystone')
-                    console.log(result.headers['x-subject-token']);
+                    // console.log('end keystone')
+                    // console.log(result.headers['x-subject-token']);
                     res.json({
                         message : "success login",
                         token : token,

@@ -32,6 +32,13 @@ app.use('/auth', authRouter);
 app.use('/files', filesRouter);
 app.use('/search', searchRouter);
 
+var corsOptions={
+  origin:'*',
+  optionSuccessStatus: 200
+}
+
+app.use(cors(corsOptions));
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

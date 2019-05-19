@@ -5,19 +5,19 @@ import DialogContent from '@material-ui/core/DialogContent';
 import TextField from '@material-ui/core/TextField';
 // import SHA512  from 'crypt o-js/sha512';
 import axios from 'axios';
-import config from '../config/config';
+import config, { cloudUri } from '../config/config';
 import Person from '@material-ui/icons/Person';
 import PersonAdd from '@material-ui/icons/PersonAdd';
 import Divider from '@material-ui/core/Divider';
 import { connect } from 'react-redux';
-import { setUser, setDir } from '../actions';
+import * as actions from '../actions';
 
 class InitModal extends Component {
   constructor(props){
     super(props);
     this.state={
       selectedLogin : true, 
-      open: false
+      open: true
     };
   }
   changeSelected = (data)=>{
@@ -69,6 +69,8 @@ class InitModal extends Component {
   }
 }
 
+
+//@login
 class LoginBox extends Component {
 
   constructor(props){
@@ -76,6 +78,8 @@ class LoginBox extends Component {
     this.state = {
       id: '',
       pw: '',
+      // token: '',
+      // os_token: ''
     };
   }
 
@@ -85,34 +89,38 @@ class LoginBox extends Component {
     })
   }
 
-  onLogin = async() => {
+  onLogin = async () => {
     if(this.state.id==='' || this.state.pw===''){
       alert('빈칸을 모두 채워 주세요!');
       return;
     }
     // 로그인 성공시
-    await axios.post(`${config.serverUri}/auth/login`, {
+      await axios.post(`${config.serverUri}/auth/login`, {
       email : this.state.id,
       pw : this.state.pw // crypto 사용한 개선 필요
-    }).then(async(res) =>{
+    }).then((res) =>{
+      console.log(res)
       if(res.status===200 && res.data.success){
-        // web storage에 token 저장하면 자동로그인 가능
-        let user = {
-          email : this.state.id,
-          pw : this.state.pw,
-          name : res.data.user_name,
-          token : res.data.token
-        }
-        await this.setState({ 
-          id : '',
-          pw: '' 
-        });
-        alert("로그인 성공!");
-        this.props.close();
-        this.props.dispatch(setUser(user)); //store로 dispatch
-        this.props.dispatch(setDir(res.data.dir));
-      }
-    }).catch(err => {
+            // web storage에 token 저장하면 자동로그인 가능
+            let user = {
+              id : this.state.id,
+              pw : this.state.pw,
+              // name : res.data.user_name,
+              token : res.data.token,
+              os_token : res.data.os_token
+            }
+            console.log('jwt token : ' + user.token)
+            console.log('os token : ' + user.os_token)
+            this.setState({ 
+              id : '',
+              pw: '' 
+            });
+            alert("로그인 성공!");
+            this.props.close();
+            this.props.setUser(user);
+            // this.props.dispatch(setUser(user)); //store로 dispatch
+            // this.props.dispatch(setDir(res.data.dir));
+      }}).catch(err => {
       console.log("ERR:", err.response);
       if(err.response && err.response.status===500 && !err.response.data.success){
         alert('아이디 또는 비밀번호가 틀렸습니다.');
@@ -146,23 +154,23 @@ class LoginBox extends Component {
     }  
   }
 
-// let mapDispatchToProps = (dispatch) => {
-//     console.log('dispatch : ', loggedUser);
-//     return {
-//       setUser: (loggedUser) => dispatch(setUser(loggedUser)),
-//     };
-// };
+const mapDispatchProps = (dispatch) => {
+    return {
+      setUser : (userInfo) => { dispatch(actions.setUser(userInfo))}
+    }
+  }
 
 // connect() : store와 연결해주는 함수
-LoginBox = connect()(LoginBox); 
+LoginBox = connect(undefined, mapDispatchProps)(LoginBox); 
 
+//회원가입
 class SignUpBox extends Component {
   constructor(props){
     super(props);
     this.state={
       user : {
         name: '',
-        email: '',
+        email: '', //id
         pw: ''
       },
       checkpw: '',
@@ -172,17 +180,24 @@ class SignUpBox extends Component {
     };
   }
   
-  handleChange = name => async(event) => {
-    if (name === 'checkpw'){
-      await this.setState({[name]: event.target.value})
+  //모달에서의 입력 처리
+  //item은 항목을 의미
+  handleChange = item => async(event) => {
+    if (item === 'email'){
+      if ([item] !== event.target.value)
+        this.setState({isValidEmail : false, checkEmail : false})
+    }
+    if (item === 'checkpw'){
+      await this.setState({[item]: event.target.value})
     } else {
       await this.setState({
         user:{
           ...this.state.user,
-          [name]: event.target.value
+          [item]: event.target.value
         }
       });
     }
+    //비밀번호 확인
     if(this.state.checkpw !== this.state.user.pw){
       this.setState({isErr : true});
     } else {
@@ -191,24 +206,29 @@ class SignUpBox extends Component {
   }
 
   onCheckEmail = async()=>{
+    if(this.state.user.email === '') 
+      {
+        alert('아이디를 입력하세요') 
+        return;
+      }
     this.setState({checkEmail : true});
     await axios.post(`${config.serverUri}/auth/check/vaildemail`, {
       email : this.state.user.email
     }).then(async(res) => {
       console.log("RES : ",res);
-      if(res.data.count == 0) await this.setState({isValidEmail : true});
+      if(res.data.count === 0) await this.setState({isValidEmail : true});
     }).catch(err => {
       console.log("server err : ", err.response);
     })
   }
 
   onSubmit = async(e) => {
-    if(this.state.user.email=='' || this.state.user.name=='' ||this.state.user.pw==''||this.state.checkpw==''){
-      alert('빈칸을 모두 채워 주세요!');
+    if(this.state.user.email==='' || this.state.user.name==='' ||this.state.user.pw===''||this.state.checkpw===''){
+      alert('빈칸을 모두 채워 주세요');
       return;
     }
     if(!this.state.isValidEmail){
-      alert('이메일 중복 확인');
+      alert('중복 확인을 해주세요');
       return;
     }
     if(this.state.isErr){
@@ -216,6 +236,7 @@ class SignUpBox extends Component {
       return;
     }
     e.preventDefault();
+    //서버를 통해서 sequelize로 디비에 추가 & openstack 계정 생성
     axios.post(`${config.serverUri}/auth/register`,this.state.user)
     .then(async(res) => {
       await this.setState({
@@ -256,8 +277,8 @@ class SignUpBox extends Component {
                 {
                   this.state.checkEmail?
                     this.state.isValidEmail?
-                    <p style={{color : "blue", fontSize: "14px"}}>사용 가능한 이메일</p> 
-                    : <p style={{color : "red", fontSize: "14px"}}>이미 존재하는 이메일</p>
+                    <p style={{color : "blue", fontSize: "14px"}}>사용 가능한 아이디</p> 
+                    : <p style={{color : "red", fontSize: "14px"}}>이미 존재하는 아이디</p>
                   :<div/>
                 }
                 <TextField
@@ -281,7 +302,7 @@ class SignUpBox extends Component {
                     margin="normal"
                     variant="outlined"
                     onChange={this.handleChange('checkpw')}/>
-                { this.state.checkpw != ''?
+                { this.state.checkpw !== ''?
                     this.state.isErr ? 
                     <p style={{color : "red", fontSize: "14px"}}>일치하지 않습니다.</p> 
                     : <p style={{color : "blue", fontSize: "14px"}}>일치합니다.</p>

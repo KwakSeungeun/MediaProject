@@ -16,8 +16,7 @@ code {
 
 .top-container{
   height: 10vh;
-  /* background: #fafafa; */
-  background: skyblue;
+  background: #fafafa;
 }
 
 .main-container{
@@ -27,18 +26,20 @@ code {
   /* background: red; */
 }
 .side-container{
-  /* background: #fafafa; */
-  background: green;
+  background: #fafafa;
+  /* background: green; */
   padding: 20px;
   flex: 2;
-  overflow-y: auto;
+  overflow-y: hidden;
+  border-right: 1px solid rgb(148, 195, 98);
 }
 .contents-container{
-  /* background: #fafafa; */
-  background: yellow;
+  background: #fafafa;
+  /* background: yellow; */
   padding: 20px;
   flex: 10;
   overflow-y: auto;
+  /* border-top: 1px solid rgb(148, 195, 98); */
 }
 
 .row-container{
@@ -62,7 +63,10 @@ code {
 
 .flex-6{
   flex: 6;
-  background: white;
+}
+
+.flex-7{
+  flex: 7;
 }
 
 .m-1{
@@ -70,15 +74,19 @@ code {
 }
 
 img{
-  width: 80px;
+  margin-top: 10px;
+  margin-left: 30px;
+  width: 100px;
   height: auto;
-  }
+}
 
   .search{
+    height: 40px;
     padding: 0 30px 0 30px;
     margin: 0 10% 0 10%;
     display: flex;
     align-items: center;
+    border: 2px rgb(148, 195, 98) solid; 
     border-radius: 8px;
 }
 
@@ -97,6 +105,7 @@ img{
     float: left;
 }
 .align-right{
+    display: flex;
     float: right;
 }
 
@@ -138,20 +147,16 @@ img{
   padding : 32px;
 }
 
-.Content {
-  display: flex;
-  flex-direction: row;
-  padding-top: 16px;
-  box-sizing: border-box;
-  width: 100%;
-}
 
 .Files {
-  margin-left: 32px;
+  margin-top: 16px;
+  width: 100%;
+  border: 2px solid rgb(187, 186, 186);
   align-items: flex-start;
   justify-items: flex-start;
   flex: 1;
   overflow-y: auto;
+  overflow-x : hidden;
 }
 
 .Actions {
@@ -169,9 +174,11 @@ img{
 }
 
 .Dropzone {
-  height: 200px;
-  width: 200px;
+  margin-left: calc(50% - 70px);
+  height: 120px;
+  width: 140px;
   background-color: #fff;
+  /* background-color: blue; */
   border: 2px dashed rgb(187, 186, 186);
   border-radius: 50%;
   display: flex;

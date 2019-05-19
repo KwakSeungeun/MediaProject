@@ -1,5 +1,7 @@
 import React, {Component} from 'react'
 import '../index.css'
+import Button from '@material-ui/core/Button';
+import Lightbox from 'react-images';
 import Dropzone from './DropZone.js'
 import Progress from './Progress.js'
 import axios from 'axios';
@@ -20,7 +22,6 @@ class Upload extends Component {
     this.onFilesAdded = this.onFilesAdded.bind(this);
     this.uploadFiles = this.uploadFiles.bind(this);
     this.sendRequest = this.sendRequest.bind(this);
-    this.renderActions = this.renderActions.bind(this);
   }
 
   onFilesAdded(files) {
@@ -29,20 +30,24 @@ class Upload extends Component {
     }));
   }
 
-  async uploadFiles() {
-    this.setState({ uploadProgress: {}, uploading: true });
-    const promises = [];
-    this.state.files.forEach(file => {
-      promises.push(this.sendRequest(file));
-    });
-    try {
-      await Promise.all(promises);
-
-      this.setState({ successfullUploaded: true, uploading: false });
-    } catch (e) {
-      // Not Production ready! Do some error handling here instead...
-      this.setState({ successfullUploaded: true, uploading: false });
+  uploadFiles = async() => {
+    if(this.state.files.length == 0){
+      alert("하나 이상의 파일을 선택해 주세요.");
+      return;
     }
+    // this.setState({ uploadProgress: {}, uploading: true });
+    // const promises = [];
+    // this.state.files.forEach(file => {
+    //   promises.push(this.sendRequest(file));
+    // });
+    // try {
+    //   await Promise.all(promises);
+
+    //   this.setState({ successfullUploaded: true, uploading: false });
+    // } catch (e) {
+    //   // Not Production ready! Do some error handling here instead...
+    //   this.setState({ successfullUploaded: true, uploading: false });
+    // }
   }
 
   sendRequest(file) {
@@ -113,52 +118,30 @@ class Upload extends Component {
     }
   }
 
-  renderActions() {
-    if (this.state.successfullUploaded) {
-      return (
-        <button
-          onClick={() =>
-            this.setState({ files: [], successfullUploaded: false })
-          }
-        >
-          Clear
-        </button>
-      );
-    } else {
-      return (
-        <button
-          disabled={this.state.files.length < 0 || this.state.uploading}
-          onClick={this.uploadFiles}
-        >
-          Upload
-        </button>
-      );
-    }
-  }
-
   render() {
     return (
       <div className="Upload">
-        <div className="Content">
-          <div>
-            <Dropzone
-              onFilesAdded={this.onFilesAdded}
-              disabled={this.state.uploading || this.state.successfullUploaded}
-            />
-          </div>
-          <div className="Files">
-            {this.state.files.map(file => {
-              return (
-                <div key={file.name} className="Row">
-                  <span className="Filename">{file.name}</span>
-                  {this.renderProgress(file)}
-                </div>
-              );
-            })}
-          </div>
+          <Dropzone
+            onFilesAdded={this.onFilesAdded}
+            disabled={this.state.uploading || this.state.successfullUploaded}
+          />
+          {
+            this.state.files.length != 0 ?
+              <div className="Files">
+                {this.state.files.map(file => {
+                  return (
+                    <div key={file.name} className="Row">
+                      <span className="Filename">{file.name}</span>
+                      {this.renderProgress(file)}
+                    </div>
+                  );
+                })}
+              </div>
+            : null
+          }
+          <Button variant="outlined" onClick={this.uploadFiles} 
+            style={{marginTop: "16px", width: "100%"}}>완료</Button>
         </div>
-        <div className="Actions">{this.renderActions()}</div>
-      </div>
     );
   }
 }

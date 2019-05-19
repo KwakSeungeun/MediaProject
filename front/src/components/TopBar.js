@@ -45,8 +45,9 @@ class TopBar extends Component {
 
                 {/* 검색 */}
                 <div className="flex-6 search">
-                    <InputBase placeholder="파일을 검색해 보세요" className="flex-6"></InputBase>
-                    <IconButton className="flex-1" onClick={this.onSearch} aria-label="Search">
+                    <InputBase placeholder="파일을 검색해 보세요" className="flex-7"></InputBase>
+                    <IconButton style={{margin: "0px 0px 10px 0px"}} className="flex-1" 
+                        onClick={this.onSearch} aria-label="Search">
                         <SearchIcon />
                     </IconButton>
                 </div>

@@ -57,10 +57,9 @@ exports.register = (req, res)=>{
                     headers:{
                         'X-Auth-Token' : `${adminToken.headers['x-subject-token']}`
                     }
-                }).then(result => {
+                }).then(() => {
                     res.json({
-                        message: "success",
-                        result : result
+                        message: 'success sign up'
                     });
                 }).catch(err=>{
                     res.status(500).json({
@@ -72,7 +71,7 @@ exports.register = (req, res)=>{
                 res.status(500).json({
                     message: 'Unable get tokens',
                     success : false
-                    });
+                });
             })
         }).catch(err=>{ //sequelize directory 생성 에러
             res.status(500).json({

@@ -7,8 +7,8 @@ import axios from 'axios';
 import config from '../config/config.js';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { CircularProgressbar } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css';
+// import { CircularProgressbar } from 'react-circular-progressbar';
+// import 'react-circular-progressbar/dist/styles.css';
 
 class Upload extends Component {
   constructor(props) {
@@ -33,7 +33,7 @@ class Upload extends Component {
   }
 
   uploadFiles = async() => {
-    if(this.state.files.length == 0){
+    if(this.state.files.length === 0){
       alert("하나 이상의 파일을 선택해 주세요.");
       return;
     }

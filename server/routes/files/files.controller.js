@@ -24,7 +24,7 @@ exports.upload = (req, res) =>{
           console.log(data)
           axios.put(`${config.swiftUri}/v1/${config.adminProjectId}/${user.id}/${file.name}`, data, {
             headers: {
-              // "Content-Type" : `${file.type}`,
+              "Content-Type" : `${file.type}`,
               "X-Auth-Token" : `${user.os_token}`
             },
             // body: data,

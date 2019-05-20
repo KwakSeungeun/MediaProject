@@ -35,6 +35,7 @@ AWS EBS를 사용하는 경우 단지 대용량 스토리지를 빌리는 것으
 #.Type1(Bare Metal, Native VMM)  
 VM / VMM(Hypervisor) / HW 순서의 레이어  
 
+
 #.Type2(Hosted VMM)  
 VM / VMM / OS / HW  
 

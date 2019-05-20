@@ -30,6 +30,7 @@ AWS EBS를 사용하는 경우 단지 대용량 스토리지를 빌리는 것으
 
 <h4>가상화 기술(Virtualization)</h4>
 가상화 : 컴퓨터에서 컴퓨터 리소스의 추상화를 일컫는 광범위한 용어이다. "물리적인 컴퓨터 리소스의 특징을 다른 시스템, 응용 프로그램, 최종 사용자들이 리소스와 상호 작용하는 방식으로부터 감추는 기술"로 정의, 쉽게 말해 없는 것을 있는 것처럼 보이게 하는 기술  
+
 <h5>Hypervisor 설치 방식에 따른 분류</h5>
 #.Type1(Bare Metal, Native VMM)  
 VM / VMM(Hypervisor) / HW 순서의 레이어  
@@ -52,7 +53,8 @@ Containers / OS / HW : 하나의 OS에 동일한 OS를 사용하는 여러 환�
 컨테이너는 훨씬 가볍고 운영체제 커널을 공유하며, 시작이 훨씬 빠르고 운영체제 전체 부팅보다 메모리를 훨씬 적게 차지합니다."  
 
 ※VMM / OS / HW 순서의 레이어일지라도 VMM이 Priviledged instruction을 이용해서 HW에 직접 접근하는 경우가 있을 수 있다.  
-<h4>가상화 방식에 따른 분류</h4>  
+
+<h5>가상화 방식에 따른 분류</h5>  
 #.전가상화(Full Virtualization)  
 guest OS에서의 privileged instruction 호출  
 > CPU입장에서 유저 모드에서의 호출  

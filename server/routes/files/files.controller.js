@@ -11,31 +11,40 @@ exports.getList = (req, res)=>{
 
 exports.upload = (req, res) =>{
   let form = new formidable.IncomingForm()
-  form.multiples = true;
-  form.keepExtensions = true;
+  form.multiples = true; //여러 파일 업로드
+  form.encoding = 'utf-8'; //인코딩 타입 정의 (한글 사용 가능) => header에 setting이 되지 않음
+  form.keepExtensions = true; //확장자 표시
 
-  form.parse(req, async function(err, fields, files) {
-     let user = JSON.parse(fields.user_info);
+  let user;
+  form.on('field', (field, value)=>{
+    user = JSON.parse(value);
+  }).on('file', async (field, file)=>{
+    console.log("type : ", file.type);
+    await fs.readFile(file.path,'utf-8' , async function(err, data){
+      await axios.put(`${config.swiftUri}/v1/${config.adminProjectId}/${user.id}/${file.name}`, data, {
+        headers: {
+          "Content-Type" : `${file.type}`,
+          "X-Auth-Token" : `${user.os_token}`
+        },
+      }).then(()=>{
+        console.log("클라우드 업로드 성공!");
+      }).catch(err => {
+        res.status(500).json( {
+          message : "Fail upload to Cloud(SWIFT)!",
+          err : err.message
+        });
+      });
+    });
+  }).on('end', ()=>{
+    console.log("=========SUCCESS!========");
+    res.json({message : "success upload files"});
+  }).on('error', error=>{
+    console.log("ERR!!\n");
+    res.status(500).json({message : "fail upload"});
+  });
 
-     await _.map(files.file, async(file)=>{
-       // temp에 저장되어 있는 데이터 읽기
-        return await fs.readFile(file.path, async(err, binaryData)=>{
-          // swift api를 이용해 읽어온 data 넘기기
-          return await axios.put(`${config.swiftUri}/v1/${config.adminProjectId}/${user.id}/${file.name}`, 
-          binaryData, {
-            headers: {
-              "Content-Type" : `${file.type}`,
-              "X-Auth-Token" : `${user.os_token}`
-            },
-          }).catch(err => {
-            res.status(500).json({
-              err : err.message
-            });
-          });
-        })
-     })
-
-     res.json({message : "success upload files"});
+  form.parse(req, (err, fields, files)=>{
+    console.log("============LAST============");
   })
 }
 

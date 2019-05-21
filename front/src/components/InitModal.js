@@ -17,7 +17,7 @@ class InitModal extends Component {
     super(props);
     this.state={
       selectedLogin : true, 
-      open: true
+      open: false
     };
   }
   changeSelected = (data)=>{
@@ -112,7 +112,7 @@ class LoginBox extends Component {
               id : '',
               pw: '' 
             });
-            alert("로그인 성공!");
+            // alert("로그인 성공!");
             this.props.close();
             this.props.setUser(user);
       }}).catch(err => {

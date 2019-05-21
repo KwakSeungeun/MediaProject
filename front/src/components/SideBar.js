@@ -4,26 +4,52 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Tooltip from '@material-ui/core/Tooltip';
 import PhotoSearch from './PhotoSearch';
-
+import _ from 'lodash';
 
 class SideBar extends Component {
     constructor(props){
         super(props);
         this.state = {
             open: false,
-            listItem : [
-                {id : 'photo_search', name : '사진으로 검색하기', selected : false}, 
-                {id : 'my_dir', name : '내 폴더', selected: false}, 
-                {id : 'recent_files', name : '최근 열어본 파일', selected: false },
-                {id : 'favorites', name : '즐겨찾기', selected: false },
-                {id : 'trash', name: '휴지통', selected:false}
-            ]
+            listItem : { // 각 기능 실행하기 위한 object
+                photo_search :  false, 
+                my_dir : false, 
+                recent_files :  false ,
+                favorites : false ,
+                trash : false
+            }
         };
     }
     
-    clickList = (e,click_val)=>{
+    clickList = async(e,val)=>{
         e.preventDefault();
-        console.log(click_val);
+
+        let temp = {};
+        _.forEach(this.state.listItem, (item, key)=>{
+            if(key == val){
+                temp[key] = true;
+            }else{
+                temp[key] = false;
+            }
+        })
+        
+        await this.setState({
+            ...this.state,
+            listItem : temp
+        });
+    }
+
+    onClose = ()=>{
+        this.setState({
+            ...this.state,
+            listItem : { // 모두 닫기
+                photo_search :  false, 
+                my_dir : false, 
+                recent_files :  false ,
+                favorites : false ,
+                trash : false
+            }
+        })
     }
 
     render() {
@@ -35,7 +61,7 @@ class SideBar extends Component {
                     <Tooltip title="자동으로 원하는 친구들의 사진을 모아줍니다.">
                         <ListItem  button>
                             <ListItemText onClick={(e)=>this.clickList(e,'photo_search')} primary="사진으로 검색하기" />
-                            <PhotoSearch open = {false}/>
+                            <PhotoSearch open = {this.state.listItem.photo_search} close = {this.onClose}/>
                         </ListItem>
                     </Tooltip>
                         {/* <ListItem button>

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -8,26 +7,26 @@ import PhotoSearch from './PhotoSearch';
 
 
 class SideBar extends Component {
-    state = {
-        open: false,
-        listItem : [
-            {id : 'photo_search', name : '사진으로 검색하기', selected : false}, 
-            'my_dir', 
-            'recent_files', 
-            'favorites', 
-            'trash'
-        ]
-    };
+    constructor(props){
+        super(props);
+        this.state = {
+            open: false,
+            listItem : [
+                {id : 'photo_search', name : '사진으로 검색하기', selected : false}, 
+                {id : 'my_dir', name : '내 폴더', selected: false}, 
+                {id : 'recent_files', name : '최근 열어본 파일', selected: false },
+                {id : 'favorites', name : '즐겨찾기', selected: false },
+                {id : 'trash', name: '휴지통', selected:false}
+            ]
+        };
+    }
     
-    clickList = (click_val)=>{
-        let index = this.state.listItem.findIndex((element)=>{
-            return element.id == click_val;
-        });
-        switch(click_val){}
+    clickList = (e,click_val)=>{
+        e.preventDefault();
+        console.log(click_val);
     }
 
     render() {
-        let search = <PhotoSearch/>
         return (
         <div>
             {/* 기능 */}
@@ -35,8 +34,8 @@ class SideBar extends Component {
                 <List component="nav">
                     <Tooltip title="자동으로 원하는 친구들의 사진을 모아줍니다.">
                         <ListItem  button>
-                            <ListItemText onClick={this.clickList('photo_search')} primary="사진으로 검색하기" />
-                            
+                            <ListItemText onClick={(e)=>this.clickList(e,'photo_search')} primary="사진으로 검색하기" />
+                            <PhotoSearch open = {false}/>
                         </ListItem>
                     </Tooltip>
                         {/* <ListItem button>

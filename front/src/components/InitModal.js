@@ -5,7 +5,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import TextField from '@material-ui/core/TextField';
 // import SHA512  from 'crypt o-js/sha512';
 import axios from 'axios';
-import config, { cloudUri } from '../config/config';
+import config from '../config/config';
 import Person from '@material-ui/icons/Person';
 import PersonAdd from '@material-ui/icons/PersonAdd';
 import Divider from '@material-ui/core/Divider';
@@ -115,9 +115,6 @@ class LoginBox extends Component {
             alert("로그인 성공!");
             this.props.close();
             this.props.setUser(user);
-            console.log("토큰 : ", res.data.os_token);
-            // this.props.dispatch(setUser(user)); //store로 dispatch
-            // this.props.dispatch(setDir(res.data.dir));
       }}).catch(err => {
       if(err.response && err.response.status===500 && !err.response.data.success){
         alert('아이디 또는 비밀번호가 틀렸습니다.');

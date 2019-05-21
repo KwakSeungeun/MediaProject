@@ -4,7 +4,6 @@ const formidable = require('formidable')
 const _ = require('lodash');
 const fs = require('fs');
 
-
 exports.getList = (req, res)=>{
   res.send('get files!');
 };

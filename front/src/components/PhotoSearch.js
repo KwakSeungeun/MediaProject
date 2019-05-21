@@ -6,6 +6,8 @@ import Divider from '@material-ui/core/Divider';
 import Dropzone from './DropZone.js'
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+import config from '../config/config';
+import axios from 'axios';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import Button from '@material-ui/core/Button'
@@ -38,6 +40,17 @@ class PhotoSearch extends Component {
                     alert("검색할 하나의 이미지를 반드시 넣어 주세요!");
                     return;
                 }
+                let formData = new FormData();
+                await formData.append('file', this.state.selectedFile);
+                console.log("FORMDATA!!! : ", formData);
+                await axios.post(`${config.serverUri}/search/face/detection`, formData)
+                .then((res)=>{
+                    alert("성공!");
+                    console.log(res);
+                }).catch(err=>{
+                    console.log(err);
+                    alert("에러!")
+                })
                 await this.setState({
                     ...this.state,
                     step : 2,
@@ -80,7 +93,7 @@ class PhotoSearch extends Component {
         return(
             <div>
                 <Dialog
-                    open={true}
+                    open={this.props.open}
                     disableBackdropClick = {true}
                     fullWidth = {true}
                     aria-labelledby="alert-dialog-title"

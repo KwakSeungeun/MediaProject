@@ -9,8 +9,7 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Upload from './Upload.js'
 import Thumb from './Thumb.js'
-import {render} from 'react-dom'
-import Gallery from 'react-grid-gallery'
+import { connect } from 'react-redux';
 
 const IMAGES = [{
     src : "http://15.164.100.240:8080/v1/AUTH_c0b8a4b703d94f0db5e9446472dd8432/q/MON.jpg?temp_url_sig=1a5dd0836dd9b594e6002c241d9b120d6027a30a&temp_url_expires=1558440664",
@@ -31,8 +30,6 @@ class MainContents extends Component {
         };
     }
     addDir = ()=>{
-        console.log("user : ", this.props.user);
-        console.log("dir : ", this.props.dir);
     }
 
     openAddFolder = ()=>{
@@ -97,13 +94,21 @@ class MainContents extends Component {
             </div>
             <div>
                 {
-                    this.props.user.token!=='' ?
-                    <div><Thumb /></div>
+                    this.props.userInfo != null ?
+                    <div style={{width : "80%", margin : "32px"}}><Thumb /></div>
                     : null
                 }
             </div>
         </Fragment>
     )}
 }
+
+const mapStateToProps = (state) => {
+    return {
+        userInfo : state.user
+    }
+  }
+  
+MainContents = connect(mapStateToProps)(MainContents)
 
 export default MainContents;

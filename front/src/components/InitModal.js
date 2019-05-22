@@ -17,15 +17,18 @@ class InitModal extends Component {
     super(props);
     this.state={
       selectedLogin : true, 
-      open: true
     };
+  }
+  componentWillMount(){
+    // localStorage.clear();
+    let user = JSON.parse(localStorage.getItem('user'));
+    if(user != null){
+      this.props.setUser(user);
+      this.props.setInitModalOpen(false);
+    }
   }
   changeSelected = (data)=>{
     this.setState({selectedLogin : data});
-  }
-
-  onClose = ()=>{
-    this.setState({open : false});
   }
 
   onLogin = ()=>{
@@ -40,7 +43,7 @@ class InitModal extends Component {
     return (
       <div className = "root-container">
         <Dialog
-              open={this.state.open}
+              open={this.props.initModalOpen}
               disableBackdropClick = {true}
               fullWidth = {true}
               aria-labelledby="alert-dialog-title"
@@ -59,7 +62,7 @@ class InitModal extends Component {
               <DialogContent>
                   {
                     this.state.selectedLogin?
-                    (<LoginBox close={this.onClose}/>)
+                    (<LoginBox/>)
                     :(<SignUpBox selectedLogin={this.changeSelected}/>)
                   }
               </DialogContent>
@@ -69,7 +72,6 @@ class InitModal extends Component {
   }
 }
 
-
 //@login
 class LoginBox extends Component {
 
@@ -78,8 +80,6 @@ class LoginBox extends Component {
     this.state = {
       id: '',
       pw: '',
-      // token: '',
-      // os_token: ''
     };
   }
 
@@ -112,9 +112,12 @@ class LoginBox extends Component {
               id : '',
               pw: '' 
             });
-            // alert("로그인 성공!");
-            this.props.close();
+            console.log("로그인 성공 : ", user);
             this.props.setUser(user);
+            this.props.setInitModalOpen(false);
+            console.log(this.props.initModalOpen)
+            localStorage.setItem('user', JSON.stringify(user));
+            alert("로그인 성공!");
       }}).catch(err => {
       if(err.response && err.response.status===500 && !err.response.data.success){
         alert('아이디 또는 비밀번호가 틀렸습니다.');
@@ -149,13 +152,21 @@ class LoginBox extends Component {
   }
 
 const mapDispatchProps = (dispatch) => {
-    return {
-      setUser : (userInfo) => { dispatch(actions.setUser(userInfo))}
-    }
+  return {
+    setUser : (userInfo) => { dispatch(actions.setUser(userInfo))},
+    setInitModalOpen : (open) => { dispatch(actions.setInitModalOpen(open)) }
   }
+}
+
+const mapStateToProps = (state) => {
+  return {
+      userInfo : state.user,
+      initModalOpen : state.initModal
+  }
+}
 
 // connect() : store와 연결해주는 함수
-LoginBox = connect(undefined, mapDispatchProps)(LoginBox); 
+LoginBox = connect(mapStateToProps, mapDispatchProps)(LoginBox); 
 
 //회원가입
 class SignUpBox extends Component {
@@ -307,4 +318,7 @@ class SignUpBox extends Component {
     );
   }
 }
+
+InitModal = connect(mapStateToProps, mapDispatchProps)(InitModal); 
+
 export default InitModal;

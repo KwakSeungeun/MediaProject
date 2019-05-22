@@ -5,6 +5,7 @@
 
 export const SET_USER = 'SET_USER'; //The reducer will use that string to determine how to calculate the next state.
 export const SET_DIR = 'SET_DIR'; // 상수로 설정해줌으로써 중복, 오타 문제 등 어려운 디버깅 문제 피할 수 있다.
+export const SET_INITMODAL_OPEN = 'SET_INITMODAL_OPEN'
 
 export function setUser(value){
     return{
@@ -17,5 +18,12 @@ export function setDir(value){
     return {
         type: SET_DIR,
         dir: value
+    }
+}
+
+export function setInitModalOpen(value){
+    return {
+        type : SET_INITMODAL_OPEN,
+        open : value
     }
 }

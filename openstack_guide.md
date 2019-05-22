@@ -1,4 +1,30 @@
-<h4>오픈스택 가이드</h4>
+<h3>오픈스택 설치 가이드</h3>  
+※ 우리 프로젝트를 기준으로 작성하였다.  
+※ openstack 공식 설치 가이드를 기준으로 하되, 겪은 시행착오와 Tip, 설치 구성 요소의 의미를 중심으로 작성하였다.  
+※ Ubuntu 18.04 server LTS, openstack rocky 버전을 사용함.
+(https://docs.openstack.org/keystone/rocky/install/keystone-install-ubuntu.html)    
+
+<h4>PREREQUISITES</h4>
+<h5>Host networking</h5>
+노드마다 네트워크 인터페이스를 설정하고 노드의 privateIP주소에 hostname을 등록하는 과정
+https://docs.openstack.org/install-guide/environment-networking.html
+※Configure network interface 키워드 의미
+https://unix.stackexchange.com/questions/128439/good-detailed-explanation-of-etc-network-interfaces-syntax
+
+<h5>NTP</h5>
+노드간 synchronization을 위한 과정
+controller 노드는 정확한 time server를 reference하고, 
+그 외 노드들이 controller 노드를 reference 하도록 설정한다.
+https://docs.openstack.org/install-guide/environment-ntp.html
+
+
+
+
+
+<h4>KEYSTONE</h4>  
+Keystone은 openstack 서비스를 이용하기 위한 인증과 관리 등을 제공하는 서비스이다.  
+※Swift만 사용하는 경우, Swift는 TempAuth를 제공하여 독자적인 서비스가 가능하기 때문에 굳이 설치하지 않아도 상관없다.  
+
 
 
 

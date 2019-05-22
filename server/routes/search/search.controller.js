@@ -1,5 +1,7 @@
 const formidable = require('formidable');
 const fs = require('fs');
+// const pythonShell = require('python-shell');
+const cmd = require('node-command-line');
 
 exports.faceDetection = (req, res)=>{
     let form = new formidable.IncomingForm()
@@ -8,11 +10,22 @@ exports.faceDetection = (req, res)=>{
     form.keepExtensions = true; //확장자 표시
 
     form.on('file', (field, file)=>{
-        console.log(file);
+        console.log("읽어온 파일 : ",file);
     })
-    // fs.readFile(form.uploadDir,data => {
-    //     console.log(data);
-    // })
-    console.log("====END=====")
-    res.send('!!!');
+    form.parse(req, (err, fields, files)=>{
+        console.log("============LAST============");
+    })
+
+    cmd.run('python ../../face_recognition/src/faceDetection.py');
+    // let options = {
+    //     mode: 'text',
+    //     pythonOptions: ['-u'],
+    //     scriptPath: '../../../face_recognition/src/',
+    //     args: ['test1', 'test2']
+    // };
+    // pythonShell.run('faceDetection.py', options, function (err, results) {
+    //     if (err) throw err;
+    //     console.log('results: %j', results);
+    //     res.send('success');
+    // });
 }

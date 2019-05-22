@@ -104,6 +104,8 @@ img{
     width: 10%;
     float: left;
 }
+
+
 .align-right{
     display: flex;
     float: right;
@@ -250,10 +252,8 @@ button {
   font-family: 'Roboto medium', sans-serif;
   font-size: 14px;
   display: inline-block;
-  height: 36px;
   min-width: 88px;
   padding: 6px 16px;
-  line-height: 1.42857143;
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
@@ -266,7 +266,7 @@ button {
   user-select: none;
   border: 0;
   border-radius: 2px;
-  background: rgba(103, 58, 183, 1);
+  background: rgb(148, 195, 98, 0.9);
   color: #fff;
   outline: 0;
 }

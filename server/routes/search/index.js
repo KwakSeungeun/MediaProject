@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const controller = require('./search.controller');
 
-router.get('/face', controller.searchFace);
+router.post('/face/detection', controller.faceDetection);
 
 module.exports = router;

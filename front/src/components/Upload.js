@@ -7,8 +7,11 @@ import axios from 'axios';
 import config from '../config/config.js';
 import { connect } from 'react-redux';
 import _ from 'lodash';
+<<<<<<< HEAD
 // import { CircularProgressbar } from 'react-circular-progressbar';
 // import 'react-circular-progressbar/dist/styles.css';
+=======
+>>>>>>> d6696d3b38dd070fc52db5d4653ca7786f6dbe96
 
 class Upload extends Component {
   constructor(props) {

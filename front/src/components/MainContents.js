@@ -7,7 +7,6 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
-import _ from 'lodash';
 import Upload from './Upload.js'
 import Thumb from './Thumb.js'
 import {render} from 'react-dom'

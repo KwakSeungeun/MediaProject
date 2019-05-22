@@ -16,7 +16,11 @@ exports.faceDetection = (req, res)=>{
         console.log("============LAST============");
     })
 
-    cmd.run('python ../../face_recognition/src/faceDetection.py');
+    // cmd.run('activate face_recognition');
+    // cmd.run('python ../../face_recognition/src/faceDetection.py');
+
+    res.send('success');
+
     // let options = {
     //     mode: 'text',
     //     pythonOptions: ['-u'],

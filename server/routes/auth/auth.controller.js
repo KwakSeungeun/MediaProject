@@ -55,9 +55,15 @@ exports.register = (req, res)=>{
             .then(adminToken =>{
                 axios.put(`${cloud.swiftUri}/v1/${cloud.adminProjectId}/${email}`,null,{
                     headers:{
-                        'X-Auth-Token' : `${adminToken.headers['x-subject-token']}`
+                        'X-Auth-Token' : `${adminToken.headers['x-subject-token']}`,
+                        'X-Container-Meta-Temp-URL-Key' : `key`,
+                        //container 접근 secret key 설정
+                        'X-Container-Read' : `r:*`,
+                        //container에 public access로 만듦(PUT, HEAD).
+                        // 'X-Container-Write' : `*:${cloud.amdinId}`
+                        // //container에 admin이 Write access 권한 가짐(PUT, POST, DELETE).
                     }
-                }).then(() => {
+                }).then((x) => {
                     res.json({
                         message: 'success sign up'
                     });

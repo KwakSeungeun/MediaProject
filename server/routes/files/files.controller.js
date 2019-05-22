@@ -6,7 +6,20 @@ const fs = require('fs');
 
 
 exports.getList = (req, res)=>{
-  res.send('get files!');
+  axios.get(`${config.swiftUri}/v1/${config.adminProjectId}/${req.param('user_id')}`,null,{
+    headers:{
+        'X-Auth-Token' : `${req.params.token}`,
+    }
+  }).then((files)=>{
+    res.json({
+      data : files.data
+    });
+  }).catch(err=>{
+    res.status(500).json({
+      message : "fail",
+      err : err
+    })
+  })
 };
 
 exports.upload = (req, res) =>{

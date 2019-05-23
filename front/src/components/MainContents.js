@@ -9,7 +9,7 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Upload from './Upload.js'
 import Thumb from './Thumb.js'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux';
 
 class MainContents extends Component {
     constructor(props){

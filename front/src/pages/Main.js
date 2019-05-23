@@ -29,7 +29,6 @@ class Main extends Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state);
   return {
       user: state.user, //현재 component의 props에 저장
       dir: state.userDir,

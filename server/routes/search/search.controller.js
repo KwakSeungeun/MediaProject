@@ -3,33 +3,98 @@ const fs = require('fs');
 // const pythonShell = require('python-shell');
 const cmd = require('node-command-line');
 
+/**
+ * Promise all
+ * @author Loreto Parisi (loretoparisi at gmail dot com)
+ */
+function promiseAllP(items, block) {
+    var promises = [];
+    items.forEach(function(item,index) {
+        promises.push( function(item,i) {
+            return new Promise(function(resolve, reject) {
+                return block.apply(this,[item,index,resolve,reject]);
+            });
+        }(item,index))
+    });
+    return Promise.all(promises);
+} //promiseAll
+
+/**
+ * read files
+ * @param dirname string
+ * @return Promise
+ * @author Loreto Parisi (loretoparisi at gmail dot com)
+ * @see http://stackoverflow.com/questions/10049557/reading-all-files-in-a-directory-store-them-in-objects-and-send-the-object
+ */
+function readFiles(dirname) {
+    return new Promise((resolve, reject) => {
+        fs.readdir(dirname, function(err, filenames) {
+            if (err) return reject(err);
+            promiseAllP(filenames,
+            (filename,index,resolve,reject) =>  {
+                fs.readFile((dirname + filename), 'utf-8', function(err, content) {
+                    if (err) return reject(err);
+                    return resolve({filename: filename, contents: content});
+                });
+            })
+            .then(results => {
+                return resolve(results);
+            })
+            .catch(error => {
+                return reject(error);
+            });
+        });
+  });
+}
+
 exports.faceDetection = (req, res)=>{
+    console.log("\n\n========================");
     let form = new formidable.IncomingForm()
     form.multiples = true; //여러 파일 업로드
     form.encoding = 'utf-8'; //인코딩 타입 정의 (한글 사용 가능) => header에 setting이 되지 않음
     form.keepExtensions = true; //확장자 표시
 
-    form.on('file', (field, file)=>{
-        console.log("읽어온 파일 : ",file);
+    let user_id = null;
+    let fileDir;
+    let sourceDir = __dirname + '\\..\\..\\..\\temp\\sourceImage';
+    let detectionDir = __dirname + "\\..\\..\\..\\face_recognition\\src";
+    let images = [];
+
+    if(!fs.existsSync(sourceDir)){
+        fs.mkdirSync(sourceDir);
+    }
+
+    new Promise(async(resolve, reject)=>{
+        // __dirname : 현재 절대 경로
+        await form.parse(req, (err, fields, files)=>{
+            user_id = fields.field;
+            let fileName = user_id + "_sourceImage";
+            let file = files.file;
+            fileDir = `${sourceDir}\\${fileName}.jpg`;
+            fs.renameSync(file.path,fileDir,()=>{});
+            resolve();
+        })
+    }).then(async()=>{
+        // python 실행 (arg로 아이디 보내주기)
+        let count = await cmd.run(`cd ${detectionDir} & activate face_recognition & python faceDetection.py ${user_id}\n`);
+    }).then(()=>{
+        //  소스파일 삭제 (croped 는 얼굴 다 찾고 삭제 하기)
+        fs.unlinkSync(`${fileDir}`);
+    }).then(async()=>{
+        // 잘린 얼굴들 보내기 
+        readFiles(`${__dirname}\\..\\..\\..\\temp\\cropedFaces\\${user_id}\\`)
+        .then(files => {
+            // console.log( "loaded ", files.length );
+            // 완료
+            res.json({
+                data : files
+            });
+        })
+        .catch( error => {
+            console.log( error );
+        });      
+    }).catch((err)=>{
+        console.log("READ FORMDATA ERR!!\n", err);
+        res.status(500).json({message : "fail face Detection"});
     })
-    form.parse(req, (err, fields, files)=>{
-        console.log("============LAST============");
-    })
-
-    // cmd.run('activate face_recognition');
-    // cmd.run('python ../../face_recognition/src/faceDetection.py');
-
-    res.send('success');
-
-    // let options = {
-    //     mode: 'text',
-    //     pythonOptions: ['-u'],
-    //     scriptPath: '../../../face_recognition/src/',
-    //     args: ['test1', 'test2']
-    // };
-    // pythonShell.run('faceDetection.py', options, function (err, results) {
-    //     if (err) throw err;
-    //     console.log('results: %j', results);
-    //     res.send('success');
-    // });
 }

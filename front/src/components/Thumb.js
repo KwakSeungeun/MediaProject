@@ -53,7 +53,7 @@ class Thumb extends Component {
                     token : this.props.userInfo.os_token,
                     user_id : this.props.userInfo.id
                 }
-            },{}).then(async(res)=>{
+            }).then(async(res)=>{
             
             await this.setState({
                 ...this.state,

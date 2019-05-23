@@ -4,10 +4,7 @@ import Gallery from 'react-grid-gallery'
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import axios from 'axios';
-import cloud, { cloudUri } from '../config/config';
-// import { resolveTxt } from 'dns';
-// import hmac from 'create-hmac'
-// import sha1 from 'sha1'
+import cloud from '../config/config';
 
 var crypto = require('crypto')
 
@@ -17,9 +14,6 @@ class Thumb extends Component {
         this.state = {
             IMAGES : [],
             files: [],
-            // count: 0,
-            // names: [],
-            // types: [],
             sig: '',
             exp: ''
         }

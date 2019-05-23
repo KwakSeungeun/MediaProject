@@ -7,11 +7,11 @@ import axios from 'axios';
 import config from '../config/config.js';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-<<<<<<< HEAD
+import MainContents from './MainContents';
+import { setToggle, resetToggle } from '../actions';
+
 // import { CircularProgressbar } from 'react-circular-progressbar';
 // import 'react-circular-progressbar/dist/styles.css';
-=======
->>>>>>> d6696d3b38dd070fc52db5d4653ca7786f6dbe96
 
 class Upload extends Component {
   constructor(props) {
@@ -52,6 +52,8 @@ class Upload extends Component {
       .then((res)=>{
         console.log(res);
         alert("업로드 완료!");
+        this.props.setToggle();
+        this.props.resetToggle();
         this.props.close();
       })
       .catch(err=>{
@@ -87,7 +89,7 @@ class Upload extends Component {
             disabled={this.state.uploading || this.state.successfullUploaded}
           />
           {
-            this.state.files.length != 0 ?
+            this.state.files.length !== 0 ?
               <div className="Files">
                 {this.state.files.map(file => {
                   return (
@@ -108,12 +110,19 @@ class Upload extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapDispatchToProps = (dispatch) => {
   return {
-      userInfo : state.user
+      setToggle: () => dispatch(setToggle()),
+      resetToggle: () => dispatch(resetToggle())
   }
 }
 
-Upload = connect(mapStateToProps)(Upload)
+const mapStateToProps = (state) => {
+  return {
+      userInfo : state.user,
+  }
+}
+
+Upload = connect(mapStateToProps, mapDispatchToProps)(Upload)
 
 export default Upload

@@ -9,17 +9,7 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Upload from './Upload.js'
 import Thumb from './Thumb.js'
-import {render} from 'react-dom'
-import Gallery from 'react-grid-gallery'
-
-const IMAGES = [{
-    src : "http://15.164.100.240:8080/v1/AUTH_c0b8a4b703d94f0db5e9446472dd8432/q/MON.jpg?temp_url_sig=1a5dd0836dd9b594e6002c241d9b120d6027a30a&temp_url_expires=1558440664",
-    thumbnail: "http://15.164.100.240:8080/v1/AUTH_c0b8a4b703d94f0db5e9446472dd8432/q/MON.jpg?temp_url_sig=1a5dd0836dd9b594e6002c241d9b120d6027a30a&temp_url_expires=1558440664",
-    thumbnailWidth: 200,
-    thumbnailHeight: 200,
-    isSelected: false,
-    caption: "Claude Monet"
-}]
+import {connect} from 'react-redux'
 
 class MainContents extends Component {
     constructor(props){
@@ -27,7 +17,7 @@ class MainContents extends Component {
         this.state = {
             openFolderModal: false,
             openFileModal : false,
-            uploadFiles : [],
+            uploadFiles : []
         };
     }
     addDir = ()=>{
@@ -52,6 +42,11 @@ class MainContents extends Component {
     }
 
     render() {
+        let user_token = this.props.userInfo.token;
+        let toggle = this.props.toggleValue.toggle;
+        console.log(user_token)
+        console.log(toggle)
+    
     return (
         <Fragment>
             <div>
@@ -97,13 +92,28 @@ class MainContents extends Component {
             </div>
             <div>
                 {
-                    this.props.user.token!=='' ?
-                    <div><Thumb /></div>
-                    : null
+                    (function() {
+                        if(user_token!=='')
+                            if(toggle)
+                                return <div><Thumb /></div>
+                            else
+                                return <div><Thumb name='fake'/></div>
+                        else
+                            return null
+                    })()
                 }
             </div>
         </Fragment>
     )}
 }
 
+const mapStateToProps = (state) => {
+    return {
+        toggleValue : state.toggle,
+        userInfo : state.user
+    }
+  }
+  
+  MainContents = connect(mapStateToProps)(MainContents)
+  
 export default MainContents;

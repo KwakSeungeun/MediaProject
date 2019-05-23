@@ -1,5 +1,9 @@
 # MediaProject
 
+## OPENSTACK 가이드 문서
+
+https://github.com/KwakSeungeun/Install_Openstack.git 
+
 ### `npm start`
 
 npm start로 서버 시작 -> [http://localhost:8080/] : route uri이다.

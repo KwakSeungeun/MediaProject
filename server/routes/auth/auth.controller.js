@@ -103,7 +103,6 @@ exports.login  = (req, res, next) => {
         include: { model : Directory } //left join
     }).then(user=>{
         // check user
-        // console.log("user : ", user.Directories);
         if(!user || user.pw!=pw){
             res.status(500).json({
                 message : "invalid id or pw",

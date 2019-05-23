@@ -24,14 +24,14 @@ def detectionFace(src):
 
 createFolder(os.path.join(currentDir, r"..\..\temp\cropedFaces"))
 createFolder(os.path.join(currentDir, r"..\..\temp\cropedFaces\\"+user_id))
-image = cv2.imread(os.path.join(currentDir, r"..\..\temp\sourceImage\\" + user_id + "_sourceImage.jpg"))
+image = cv2.imread(os.path.join(currentDir, r"..\..\temp\sourceImage\\" + user_id + "_sourceImage.jpeg"))
 # print("READ Image : ", image)
 faces = detectionFace(image)
 
 i=1
 for (x,y,w,h) in faces:
-    cv2.rectangle(image, (x,y),(x+w, y+h),(0,255,0),2)
+    cv2.rectangle(image, (x,y),(x+w, y+h),(255,255,255),0)
     sub_face = image[y:y+h, x:x+w] 
-    face_file_name = os.path.join(currentDir, r"..\..\temp\cropedFaces\\"+user_id +"\\"+ user_id +"_face_") + str(i) + ".jpg"
+    face_file_name = os.path.join(currentDir, r"..\..\temp\cropedFaces\\"+user_id +"\\"+ user_id +"_face_") + str(i) + ".jpeg"
     cv2.imwrite(face_file_name, sub_face)
     i += 1

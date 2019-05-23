@@ -9,14 +9,16 @@ import CloseIcon from '@material-ui/icons/Close';
 import config from '../config/config';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { CircularProgressbar } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css';
-import Button from '@material-ui/core/Button'
+import ReactLoading from 'react-loading';
+import ImagePicker from 'react-image-picker'
+import 'react-image-picker/dist/index.css'
+
 
 class PhotoSearch extends Component {
     constructor(props){
         super(props);
         this.state = {
+            isLoading: false,
             step : 1, // 1 : 원하는 얼굴 사진 넣기 , 2 : detection된 얼굴 중에서 선택 , 3 : 최종적으로 찾은 사진들
             btnMsg : '다음단계',
             selectedFile : null,
@@ -35,6 +37,10 @@ class PhotoSearch extends Component {
         this.props.close();
     }
 
+    onSelectFace = (value)=>{
+        // e.preventDefault();
+    }
+
     nextStep = async()=>{
         switch(this.state.step){
             case 1 : 
@@ -42,15 +48,19 @@ class PhotoSearch extends Component {
                     alert("검색할 하나의 이미지를 반드시 넣어 주세요!");
                     return;
                 }
+                this.setState({
+                    isLoading : true
+                })
                 let formData = new FormData();
                 await formData.append('file', this.state.selectedFile);
                 await formData.append('field', this.props.userInfo.id);
                 await axios.post(`${config.serverUri}/search/face/detection`, formData)
                 .then((res)=>{
                     alert("성공!");
-                    console.log(res.data);
                     this.setState({
-                        cropedFaces : res.data
+                        ...this.state,
+                        cropedFaces : res.data.data,
+                        isLoading : false
                     })
                 }).catch(err=>{
                     console.log(err);
@@ -87,7 +97,6 @@ class PhotoSearch extends Component {
     }
 
     onFilesAdded = (file)=>{
-        console.log(file[0]);
         this.setState({
             selectedFile : file[0],
             imagePreviewUrl : URL.createObjectURL(file[0])
@@ -128,13 +137,34 @@ class PhotoSearch extends Component {
                                     ></img>
                                 </div>
                             }
+                            <div style={{marginLeft: "calc(50% - 50px)"}}>
+                                {
+                                    this.state.isLoading ? 
+                                    <div>
+                                        <p style={{color : "#F4983E", fontSize: "20x", marginBottom: "0"}}><b>얼굴을 찾는 중입니다!</b></p>
+                                        <ReactLoading type={'bubbles'} color={"#F4983E"} height={10} width={100} />
+                                    </div>
+                                    : null
+                                }
+                            </div>
                         </div>
                         : null
                     }
                     {
                         this.state.step == 2 ?
-                        <div>두번째 ==> 인식된 얼굴이 맞는 지 확인
-                            <img src={this.state.cropedFaces[0].contents}></img>
+                        <div className="row-container">
+                            {/* {
+                                this.state.cropedFaces.map((face, filename)=>{
+                                    return(<img key={filename} onClick={(e)=>this.onSelectFace(e,filename)}
+                                        src={`data:image/jpeg;base64, ${face.contents}`} alt="not found"/>);
+                                })
+                            } */}
+                            <ImagePicker className="flex-1"
+                                images={this.state.cropedFaces.map((face, filename) => ({
+                                    src: `data:image/jpeg;base64, ${face.contents}`, value: filename
+                                }))}
+                                onPick={this.onSelectFace}
+                            />
                         </div>
                         : null
                     }

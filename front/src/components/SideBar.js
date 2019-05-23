@@ -60,7 +60,7 @@ class SideBar extends Component {
                 <List component="nav">
                     <Tooltip title="자동으로 원하는 친구들의 사진을 모아줍니다.">
                         <ListItem  button>
-                            <ListItemText onClick={(e)=>this.clickList(e,'photo_search')} primary="사진으로 검색하기" />
+                            <ListItemText onClick={(event)=>this.clickList(event,'photo_search')} primary="사진으로 검색하기" />
                             <PhotoSearch open = {this.state.listItem.photo_search} close = {this.onClose}/>
                         </ListItem>
                     </Tooltip>

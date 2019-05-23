@@ -27,7 +27,6 @@ class TopBar extends Component {
     };
 
     onLogout = ()=>{
-        console.log("로그아웃!");
         localStorage.clear();
         this.props.setUser(null);
         this.props.setInitModalOpen(true);

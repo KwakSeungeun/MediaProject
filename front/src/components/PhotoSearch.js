@@ -20,7 +20,8 @@ class PhotoSearch extends Component {
             step : 1, // 1 : 원하는 얼굴 사진 넣기 , 2 : detection된 얼굴 중에서 선택 , 3 : 최종적으로 찾은 사진들
             btnMsg : '다음단계',
             selectedFile : null,
-            imagePreviewUrl : ''
+            imagePreviewUrl : '',
+            cropedFaces : null,
         };
     }
 
@@ -47,7 +48,10 @@ class PhotoSearch extends Component {
                 await axios.post(`${config.serverUri}/search/face/detection`, formData)
                 .then((res)=>{
                     alert("성공!");
-                    console.log(res);
+                    console.log(res.data);
+                    this.setState({
+                        cropedFaces : res.data
+                    })
                 }).catch(err=>{
                     console.log(err);
                     alert("에러!")
@@ -129,7 +133,9 @@ class PhotoSearch extends Component {
                     }
                     {
                         this.state.step == 2 ?
-                        <div>두번째 ==> 인식된 얼굴이 맞는 지 확인</div>
+                        <div>두번째 ==> 인식된 얼굴이 맞는 지 확인
+                            <img src={this.state.cropedFaces[0].contents}></img>
+                        </div>
                         : null
                     }
                     {

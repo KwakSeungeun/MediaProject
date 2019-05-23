@@ -104,7 +104,7 @@ class LoginBox extends Component {
             let user = {
               id : this.state.id,
               pw : this.state.pw,
-              // name : res.data.user_name,
+              name : res.data.user_name,
               token : res.data.token,
               os_token : res.data.os_token
             }

@@ -7,6 +7,7 @@ import { combineReducers } from 'redux';
 const initialUserState = {
     id : '',
     pw : '',
+    name : '',
     token : '',
     os_token : '',
 }

@@ -32,7 +32,7 @@ exports.faceDetection = (req, res)=>{
         // cmd.run('activate face_recognition');
         // cmd.run('python ../../../face_recognition/src/faceDetection.py');
     }).then(()=>{
-        // 소스파일 삭제 (croped 는 얼굴 다 찾고 삭제 하기)
+        //  소스파일 삭제 (croped 는 얼굴 다 찾고 삭제 하기)
     }).then(()=>{
         // 완료
         res.send('success');

@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button'
 import logo from '../img/logo2.png';
 import { connect } from 'react-redux';
 import * as actions from '../actions';
+import { stat } from 'fs';
 
 class TopBar extends Component {
     constructor(props){
@@ -53,7 +54,10 @@ class TopBar extends Component {
                 <div className="flex-2">
                 {
                     this.props.initModalOpen == false ?
-                    <button onClick={this.onLogout}>로그아웃</button>
+                    <div className="row-container"> 
+                        <p style={{fontSize : "16px", marginRight:"16px"}}><b>{this.props.userInfo.name}&nbsp;님</b></p>
+                        <button onClick={this.onLogout}>로그아웃</button>
+                    </div>
                     :null 
                 }
                 </div>

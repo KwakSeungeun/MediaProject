@@ -22,6 +22,7 @@
     "react-image": "^2.1.1",
     "react-image-picker": "^1.1.1",
     "react-images": "^0.5.19",
+    "react-loading": "^2.0.3",
     "react-redux": "^7.0.3",
     "react-scripts": "2.1.8",
     "reactjs-file-uploader": "^1.0.8",

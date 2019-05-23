@@ -30,7 +30,7 @@ faces = detectionFace(image)
 
 i=1
 for (x,y,w,h) in faces:
-    cv2.rectangle(image, (x,y),(x+w, y+h),(20,214,144),2)
+    cv2.rectangle(image, (x,y),(x+w, y+h),(255,255,255),0)
     sub_face = image[y:y+h, x:x+w] 
     face_file_name = os.path.join(currentDir, r"..\..\temp\cropedFaces\\"+user_id +"\\"+ user_id +"_face_") + str(i) + ".jpeg"
     cv2.imwrite(face_file_name, sub_face)

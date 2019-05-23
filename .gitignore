@@ -1,2 +1,4 @@
 temp/cropedFaces
 temp/sourceImage
+openface/*
+OpenFace_2.0.5_win_x64/*

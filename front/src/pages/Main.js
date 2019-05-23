@@ -5,6 +5,7 @@ import TopBar from '../components/TopBar'
 import InitModal from '../components/InitModal';
 import MainContents from '../components/MainContents';
 import { connect } from 'react-redux';
+import * as actions from '../actions';
 
 class Main extends Component {
   render() {
@@ -17,19 +18,31 @@ class Main extends Component {
             <MainContents user={this.props.user} dir={this.props.dir}/>
           </div>
         </div>
-        <InitModal/>
+        {
+          this.props.initModalOpen == true ?
+          <InitModal/>
+          :null 
+        }
       </div>
     );
   }
 }
 
-let mapStateToProps = (state) => {
+const mapStateToProps = (state) => {
+  console.log(state);
   return {
       user: state.user, //현재 component의 props에 저장
-      dir: state.userDir
+      dir: state.userDir,
+      initModalOpen : state.initModal
   };
 }
 
-Main = connect(mapStateToProps)(Main);
+const mapDispatchProps = (dispatch) => {
+  return {
+    setInitModalOpen : (open) => { dispatch(actions.setInitModalOpen(open)) }
+  }
+}
+
+Main = connect(mapStateToProps,mapDispatchProps)(Main);
 
 export default Main;

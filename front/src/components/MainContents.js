@@ -21,8 +21,6 @@ class MainContents extends Component {
         };
     }
     addDir = ()=>{
-        console.log("user : ", this.props.user);
-        console.log("dir : ", this.props.dir);
     }
 
     openAddFolder = ()=>{
@@ -92,15 +90,9 @@ class MainContents extends Component {
             </div>
             <div>
                 {
-                    (function() {
-                        if(user_token!=='')
-                            if(toggle)
-                                return <div><Thumb /></div>
-                            else
-                                return <div><Thumb name='fake'/></div>
-                        else
-                            return null
-                    })()
+                    this.props.userInfo != null ?
+                    <div style={{width : "80%", margin : "32px"}}><Thumb /></div>
+                    : null
                 }
             </div>
         </Fragment>
@@ -109,11 +101,10 @@ class MainContents extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        toggleValue : state.toggle,
         userInfo : state.user
     }
   }
   
-  MainContents = connect(mapStateToProps)(MainContents)
-  
+MainContents = connect(mapStateToProps)(MainContents)
+
 export default MainContents;

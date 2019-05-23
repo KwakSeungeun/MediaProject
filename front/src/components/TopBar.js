@@ -3,7 +3,10 @@ import '../index.css'
 import InputBase from '@material-ui/core/InputBase';
 import IconButton from '@material-ui/core/IconButton';
 import SearchIcon  from '@material-ui/icons/Search';
+import Button from '@material-ui/core/Button'
 import logo from '../img/logo2.png';
+import { connect } from 'react-redux';
+import * as actions from '../actions';
 
 class TopBar extends Component {
     constructor(props){
@@ -11,12 +14,8 @@ class TopBar extends Component {
 
         this.state = {
             searchText : "",
-            isLoggedIn : false,
-            loginModal : false,
-            signupModal : false
         };
     }
-    
 
     goHome = () =>{
         console.log("CLICK LOGO");
@@ -26,14 +25,12 @@ class TopBar extends Component {
         console.log("CLICK SEARCH BUTTON");
     };
 
-    onLogin=()=>{
-        console.log("CLICK LOGIN BUTTON");
-        this.setState({loginModal : true});
-    };
-
-    onSignup = ()=>{
-        console.log("CLICK SIGNUP BUTTON");
-    };
+    onLogout = ()=>{
+        console.log("로그아웃!");
+        localStorage.clear();
+        this.props.setUser(null);
+        this.props.setInitModalOpen(true);
+    }
     
     render() {
         return (
@@ -54,10 +51,30 @@ class TopBar extends Component {
 
                 {/* 프로필 및 설정 */}
                 <div className="flex-2">
+                {
+                    this.props.initModalOpen == false ?
+                    <button onClick={this.onLogout}>로그아웃</button>
+                    :null 
+                }
                 </div>
             </div>
       );
     }
 }
+const mapDispatchProps = (dispatch) => {
+    return {
+      setUser : (userInfo) => { dispatch(actions.setUser(userInfo))},
+      setInitModalOpen : (open) => { dispatch(actions.setInitModalOpen(open)) }
+    }
+}
+
+const mapStateToProps = (state) => {
+    return {
+        userInfo : state.user,
+        initModalOpen : state.initModal
+    }
+}
+
+TopBar = connect(mapStateToProps, mapDispatchProps)(TopBar)
 
 export default TopBar;

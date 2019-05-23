@@ -23,7 +23,6 @@ class Thumb extends Component {
     }
 
     componentWillMount(){
-        console.log("RENDER 전")
         this.makeTempUrl();
         this.getList();
     }
@@ -45,6 +44,10 @@ class Thumb extends Component {
     }
 
     getList = () => {
+        if(this.props.userInfo == null){
+            console.log("USER NULL!")
+            return;
+        }
         axios.get(`${cloud.serverUri}/files/list`,{
                 params : {
                     token : this.props.userInfo.os_token,
@@ -124,7 +127,6 @@ class Thumb extends Component {
                         }
                         break;
                     default ://그 외
-                        console.log('default')
                         file = {
                             ...file,
                             src: `http://15.164.100.240:8080/v1/${cloud.adminProjectId}/admin/image_etc.png?temp_url_sig=${cloud.adminSig}&temp_url_expires=${cloud.adminExp}`,

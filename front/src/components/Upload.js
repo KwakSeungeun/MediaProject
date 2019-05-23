@@ -7,9 +7,6 @@ import axios from 'axios';
 import config from '../config/config.js';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import MainContents from './MainContents';
-import { setToggle, resetToggle } from '../actions';
-
 // import { CircularProgressbar } from 'react-circular-progressbar';
 // import 'react-circular-progressbar/dist/styles.css';
 
@@ -112,8 +109,8 @@ class Upload extends Component {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-      setToggle: () => dispatch(setToggle()),
-      resetToggle: () => dispatch(resetToggle())
+      // setToggle: () => dispatch(setToggle()),
+      // resetToggle: () => dispatch(resetToggle())
   }
 }
 

@@ -32,9 +32,9 @@ function readFiles(dirname) {
             if (err) return reject(err);
             promiseAllP(filenames,
             (filename,index,resolve,reject) =>  {
-                fs.readFile((dirname + filename), 'utf-8', function(err, content) {
+                fs.readFile((dirname + filename), function(err, content) {
                     if (err) return reject(err);
-                    return resolve({filename: filename, contents: content});
+                    return resolve({filename: filename, contents: content.toString('base64')});
                 });
             })
             .then(results => {
@@ -48,7 +48,6 @@ function readFiles(dirname) {
 }
 
 exports.faceDetection = (req, res)=>{
-    console.log("\n\n========================");
     let form = new formidable.IncomingForm()
     form.multiples = true; //여러 파일 업로드
     form.encoding = 'utf-8'; //인코딩 타입 정의 (한글 사용 가능) => header에 setting이 되지 않음
@@ -70,7 +69,7 @@ exports.faceDetection = (req, res)=>{
             user_id = fields.field;
             let fileName = user_id + "_sourceImage";
             let file = files.file;
-            fileDir = `${sourceDir}\\${fileName}.jpg`;
+            fileDir = `${sourceDir}\\${fileName}.jpeg`;
             fs.renameSync(file.path,fileDir,()=>{});
             resolve();
         })
@@ -84,7 +83,6 @@ exports.faceDetection = (req, res)=>{
         // 잘린 얼굴들 보내기 
         readFiles(`${__dirname}\\..\\..\\..\\temp\\cropedFaces\\${user_id}\\`)
         .then(files => {
-            // console.log( "loaded ", files.length );
             // 완료
             res.json({
                 data : files

@@ -11,7 +11,9 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import Button from '@material-ui/core/Button'
+import ImagePicker from 'react-image-picker'
+import 'react-image-picker/dist/index.css'
+
 
 class PhotoSearch extends Component {
     constructor(props){
@@ -35,6 +37,10 @@ class PhotoSearch extends Component {
         this.props.close();
     }
 
+    onSelectFace = (value)=>{
+        // e.preventDefault();
+    }
+
     nextStep = async()=>{
         switch(this.state.step){
             case 1 : 
@@ -48,9 +54,8 @@ class PhotoSearch extends Component {
                 await axios.post(`${config.serverUri}/search/face/detection`, formData)
                 .then((res)=>{
                     alert("성공!");
-                    console.log(res.data);
                     this.setState({
-                        cropedFaces : res.data
+                        cropedFaces : res.data.data
                     })
                 }).catch(err=>{
                     console.log(err);
@@ -87,7 +92,6 @@ class PhotoSearch extends Component {
     }
 
     onFilesAdded = (file)=>{
-        console.log(file[0]);
         this.setState({
             selectedFile : file[0],
             imagePreviewUrl : URL.createObjectURL(file[0])
@@ -133,8 +137,19 @@ class PhotoSearch extends Component {
                     }
                     {
                         this.state.step == 2 ?
-                        <div>두번째 ==> 인식된 얼굴이 맞는 지 확인
-                            <img src={this.state.cropedFaces[0].contents}></img>
+                        <div className="row-container">
+                            {/* {
+                                this.state.cropedFaces.map((face, filename)=>{
+                                    return(<img key={filename} onClick={(e)=>this.onSelectFace(e,filename)}
+                                        src={`data:image/jpeg;base64, ${face.contents}`} alt="not found"/>);
+                                })
+                            } */}
+                            <ImagePicker className="flex-1"
+                                images={this.state.cropedFaces.map((face, filename) => ({
+                                    src: `data:image/jpeg;base64, ${face.contents}`, value: filename
+                                }))}
+                                onPick={this.onSelectFace}
+                            />
                         </div>
                         : null
                     }

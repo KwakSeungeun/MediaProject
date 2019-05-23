@@ -112,10 +112,8 @@ class LoginBox extends Component {
               id : '',
               pw: '' 
             });
-            console.log("로그인 성공 : ", user);
             this.props.setUser(user);
             this.props.setInitModalOpen(false);
-            console.log(this.props.initModalOpen)
             localStorage.setItem('user', JSON.stringify(user));
             alert("로그인 성공!");
       }}).catch(err => {

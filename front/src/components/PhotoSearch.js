@@ -8,6 +8,7 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import config from '../config/config';
 import axios from 'axios';
+import { connect } from 'react-redux';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import Button from '@material-ui/core/Button'
@@ -42,7 +43,7 @@ class PhotoSearch extends Component {
                 }
                 let formData = new FormData();
                 await formData.append('file', this.state.selectedFile);
-                console.log("FORMDATA!!! : ", formData);
+                await formData.append('field', this.props.userInfo.id);
                 await axios.post(`${config.serverUri}/search/face/detection`, formData)
                 .then((res)=>{
                     alert("성공!");
@@ -144,5 +145,13 @@ class PhotoSearch extends Component {
         );
     }
 }
+
+const mapStateToProps = (state) => {
+    return {
+        userInfo : state.user
+    }
+  }
+  
+PhotoSearch = connect(mapStateToProps)(PhotoSearch)
 
 export default PhotoSearch;

@@ -11,15 +11,6 @@ import Upload from './Upload.js'
 import Thumb from './Thumb.js'
 import { connect } from 'react-redux';
 
-const IMAGES = [{
-    src : "http://15.164.100.240:8080/v1/AUTH_c0b8a4b703d94f0db5e9446472dd8432/q/MON.jpg?temp_url_sig=1a5dd0836dd9b594e6002c241d9b120d6027a30a&temp_url_expires=1558440664",
-    thumbnail: "http://15.164.100.240:8080/v1/AUTH_c0b8a4b703d94f0db5e9446472dd8432/q/MON.jpg?temp_url_sig=1a5dd0836dd9b594e6002c241d9b120d6027a30a&temp_url_expires=1558440664",
-    thumbnailWidth: 200,
-    thumbnailHeight: 200,
-    isSelected: false,
-    caption: "Claude Monet"
-}]
-
 class MainContents extends Component {
     constructor(props){
         super(props);

@@ -52,12 +52,13 @@ class Thumb extends Component {
             console.log("USER NULL!")
             return;
         }
+        console.log("보내기 : ", this.props.userInfo);
         axios.get(`${cloud.serverUri}/files/list`,{
                 params : {
                     token : this.props.userInfo.os_token,
                     user_id : this.props.userInfo.id
                 }
-            },{}).then(async(res)=>{
+            }).then(async(res)=>{
             
             await this.setState({
                 ...this.state,

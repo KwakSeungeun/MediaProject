@@ -5,18 +5,20 @@ const _ = require('lodash');
 const fs = require('fs');
 
 exports.getList = (req, res)=>{
-  axios.get(`${config.swiftUri}/v1/${config.adminProjectId}/${req.param('user_id')}`,null,{
+
+  axios.get(`${config.swiftUri}/v1/${config.adminProjectId}/${req.query.user_id}`,null,{
     headers:{
-        'X-Auth-Token' : `${req.params.token}`,
+        'X-Auth-Token' : `${req.query.token}`,
     }
   }).then((files)=>{
+    console.log("FILES : ", files);
     res.json({
       data : files.data
     });
-  }).catch(err=>{
+  }).catch((error)=>{
+    console.log(error);
     res.status(500).json({
       message : "fail",
-      err : err
     })
   })
 };
@@ -28,35 +30,38 @@ exports.upload = (req, res) =>{
   form.keepExtensions = true; //확장자 표시
 
   let user;
-  form.on('field', (field, value)=>{
-    user = JSON.parse(value);
-  }).on('file', async (field, file)=>{
-    console.log("type : ", file.type);
-    await fs.readFile(file.path,'utf-8' , async function(err, data){
-      await axios.put(`${config.swiftUri}/v1/${config.adminProjectId}/${user.id}/${file.name}`, data, {
-        headers: {
-          "Content-Type" : `${file.type}`,
-          "X-Auth-Token" : `${user.os_token}`
-        },
-      }).then(()=>{
-        console.log("클라우드 업로드 성공!");
-      }).catch(err => {
-        res.status(500).json( {
-          message : "Fail upload to Cloud(SWIFT)!",
-          err : err.message
+  new Promise((resolve, reject)=>{
+    form.on('field', async(field, value)=>{
+      user = JSON.parse(value);
+    }).on('file', async (field, file)=>{
+      console.log("type : ", file.type);
+      await fs.readFile(file.path , async function(err, data){
+        await axios.put(`${config.swiftUri}/v1/${config.adminProjectId}/${user.id}/${file.name}`, data, {
+          headers: {
+            "Content-Type" : `${file.type}`,
+            "X-Auth-Token" : `${user.os_token}`
+          },
+        }).then(()=>{
+          console.log("클라우드 업로드 성공!");
+        }).catch(err => {
+          res.status(500).json( {
+            message : "Fail upload to Cloud(SWIFT)!",
+            err : err.message
+          });
         });
       });
+    }).on('error', error=>{
+      reject();
     });
-  }).on('end', ()=>{
-    console.log("=========SUCCESS!========");
+  
+    form.parse(req, (err, fields, files)=>{
+      resolve()
+    })
+  }).then(()=>{
     res.json({message : "success upload files"});
-  }).on('error', error=>{
+  }).catch(()=>{
     console.log("ERR!!\n");
     res.status(500).json({message : "fail upload"});
-  });
-
-  form.parse(req, (err, fields, files)=>{
-    console.log("============LAST============");
   })
 }
 

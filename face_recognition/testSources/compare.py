@@ -30,7 +30,7 @@ def transFace(src):
 
 #crop face저장하기 위한 경로
 createFolder("./detectedFaces/")
-image = cv2.imread("../images/testImage2.jpg")
+image = cv2.imread("../images/testImage1.jpg")
 faces = detectionFace(image)
 
 for (x,y,w,h) in faces:
@@ -43,7 +43,7 @@ for (x,y,w,h) in faces:
 
 cv2.imshow("face detection test", image) 
 cv2.waitKey(0)
-removeFolder("./detectedFaces/")
+# removeFolder("./detectedFaces/")
 cv2.destoryAllWindows()
 
 # Classifier가 정확하지 않음 => 얼굴이 아닌 부분도 인식하는 경우가 있음

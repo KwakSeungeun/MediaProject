@@ -1,5 +1,41 @@
 ### Cloud Service 얼굴인식 구조
 
+### 설치 library
+
+FACE DETECTION
+```
+     pip install opencv-python
+
+    pip install https://pypi.python.org/packages/da/06/bd3e241c4eb0a662914b3b4875fc52dd176a9db0d4a2c915ac2ad8800e9e/dlib-19.7.0-cp36-cp36m-win_amd64.whl#md5=b7330a5b2d46420343fbed5df69e6a3f
+
+```
+
+FACE COMPARISION
+
+1.package 설치
+```
+    pip install boto3
+
+    pip install awscli --upgrad
+
+```
+
+2.aws configure 사용권한 설정
+```
+cmd
+
+    aws configure
+
+    access_key : 입력
+
+    access_secret_key : 입력
+
+    region : 입력(ex. 'us-east-1')
+    
+```
+
+
+
 ##### 사진 검색 시나리오
 1.사용자는 하나의 이미지 선택
 

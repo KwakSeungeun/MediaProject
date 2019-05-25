@@ -28,7 +28,7 @@ image = cv2.imread(os.path.join(currentDir, r"..\..\temp\sourceImage\\" + user_i
 # print("READ Image : ", image)
 faces = detectionFace(image)
 
-i=1
+i=0
 for (x,y,w,h) in faces:
     cv2.rectangle(image, (x,y),(x+w, y+h),(255,255,255),0)
     sub_face = image[y:y+h, x:x+w] 

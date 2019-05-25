@@ -115,7 +115,6 @@ class LoginBox extends Component {
             this.props.setUser(user);
             this.props.setInitModalOpen(false);
             localStorage.setItem('user', JSON.stringify(user));
-            alert("로그인 성공!");
       }}).catch(err => {
       if(err.response && err.response.status===500 && !err.response.data.success){
         alert('아이디 또는 비밀번호가 틀렸습니다.');

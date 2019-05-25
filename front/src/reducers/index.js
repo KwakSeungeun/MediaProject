@@ -1,5 +1,5 @@
 // action 객체를 처리하는 함수들
-import { SET_USER, SET_DIR, SET_INITMODAL_OPEN } from '../actions';
+import { SET_USER, SET_DIR, SET_INITMODAL_OPEN, SET_IMAGE_URL } from '../actions';
 import { combineReducers } from 'redux';
 //reducer : provide the state of the application 
 //store에서 상태트리와 action을 reducer에게 넘김.
@@ -38,10 +38,20 @@ const initModal = (state = true, action) =>{
     }
 }
 
+const imageTempUrl = (state = null, action) =>{
+    switch(action.type){
+        case SET_IMAGE_URL:
+            return action.url;
+        default:
+            return state
+    }
+}
+
 const cloudApp = combineReducers({
     user,
     userDir,
-    initModal
+    initModal,
+    imageTempUrl
 });
 
 export default cloudApp;

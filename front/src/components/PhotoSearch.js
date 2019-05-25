@@ -9,9 +9,12 @@ import CloseIcon from '@material-ui/icons/Close';
 import config from '../config/config';
 import axios from 'axios';
 import { connect } from 'react-redux';
+import * as actions from '../actions';
 import ReactLoading from 'react-loading';
 import ImagePicker from 'react-image-picker'
 import 'react-image-picker/dist/index.css'
+import Gallery from 'react-grid-gallery'
+import _ from 'lodash';
 
 
 class PhotoSearch extends Component {
@@ -24,6 +27,8 @@ class PhotoSearch extends Component {
             selectedFile : null,
             imagePreviewUrl : '',
             cropedFaces : null,
+            selectedCropedFaces : null,
+            resultImages : [],
         };
     }
 
@@ -37,8 +42,38 @@ class PhotoSearch extends Component {
         this.props.close();
     }
 
-    onSelectFace = (value)=>{
+    onSelectFace = async(res)=>{
         // e.preventDefault();
+        await this.setState({
+            ...this.state,
+            selectedCropedFaces : `${this.props.userInfo.id}_face_${res.value}.jpeg`
+        })
+        console.log("선택한 이미지 이름 : ", this.state.selectedCropedFaces)
+    }
+
+    getList = async(files) => {
+        let temp = [];
+        _.forEach(files, (val, i)=>{
+            let file = {
+                thumbnailWidth: 200,
+                thumbnailHeight: 200,
+                isSelected: false,
+                src : ``,
+                thumbnail: ``,
+                caption: `${val.name}`
+            };
+
+            file = {
+                ...file,
+                src:`${config.swiftUri}/v1/${config.adminProjectId}/${this.props.userInfo.id}/${val.name}?temp_url_sig=${this.state.sig}&temp_url_expires=${this.state.exp}`,
+                thumbnail:`${config.swiftUri}/v1/${config.adminProjectId}/${this.props.userInfo.id}/${val.name}?temp_url_sig=${this.state.sig}&temp_url_expires=${this.state.exp}`
+            }
+            temp.push(file);    
+        })
+        await this.setState({
+            ...this.state,
+            resultImages : temp,
+        })
     }
 
     nextStep = async()=>{
@@ -56,7 +91,6 @@ class PhotoSearch extends Component {
                 await formData.append('field', this.props.userInfo.id);
                 await axios.post(`${config.serverUri}/search/face/detection`, formData)
                 .then((res)=>{
-                    alert("성공!");
                     this.setState({
                         ...this.state,
                         cropedFaces : res.data.data,
@@ -73,6 +107,35 @@ class PhotoSearch extends Component {
                 });
                 break;
             case 2 :
+                // 얼굴 비교
+                if(this.state.selectedCropedFaces == null){
+                    alert('반드시 하나의 이미지를 선택해 주세요')
+                    return;
+                }
+                await this.setState({
+                    isLoading : true
+                })
+                console.log("image temp url", this.props.imageTempUrl.toString());
+                await axios.get(`${config.serverUri}/search/face/comparison`, {
+                    params : {
+                        file_name : this.state.selectedCropedFaces,
+                        user_id : this.props.userInfo.id,
+                        target_list : this.props.imageTempUrl.toString()
+                    }
+                }).then(async(res)=>{
+                    console.log("얼굴 유사도 비교 : ", res);
+                    await this.setState({
+                        isLoading : false
+                    })
+                }).catch(async(err)=>{
+                    console.log(err);
+                    alert("에러!")
+                    await this.setState({
+                        isLoading : false
+                    })
+                })
+
+                // 결과
                 await this.setState({
                     ...this.state,
                     step : 3,
@@ -80,6 +143,7 @@ class PhotoSearch extends Component {
                 });
                 break;  
             case 3 : 
+                // 종료
                 await this.setState({
                     ...this.state,
                     selectedFile : null,
@@ -132,49 +196,66 @@ class PhotoSearch extends Component {
                                     <Dropzone onFilesAdded={this.onFilesAdded}/>
                                 </div>
                                 :<div>
-                                    <img src={this.state.imagePreviewUrl}
-                                    style={{width: "500px", height : "auto"}}
-                                    ></img>
+                                    {
+                                        this.state.isLoading ? 
+                                        <div>
+                                            <p style={{color : "#F4983E", fontSize: "20x", marginBottom: "0", textAlign:"center"}}><b>선택한 사진에서 얼굴을 찾고 있습니다<br></br>
+                                                잠시만 기다려 주세요 :)</b></p>
+                                            <div style={{marginLeft: "calc(50% - 75px)", height: "150px", overflowY : "hidden"}}>
+                                                <ReactLoading type={'bubbles'} color={"#F4983E"} height={10} width={100} />
+                                            </div>
+                                        </div>
+                                        : <div>
+                                            <img src={this.state.imagePreviewUrl}
+                                            style={{width: "500px", height : "auto"}}
+                                            ></img>
+                                        </div>
+                                    }
                                 </div>
                             }
-                            <div style={{marginLeft: "calc(50% - 50px)"}}>
-                                {
-                                    this.state.isLoading ? 
-                                    <div>
-                                        <p style={{color : "#F4983E", fontSize: "20x", marginBottom: "0"}}><b>얼굴을 찾는 중입니다!</b></p>
-                                        <ReactLoading type={'bubbles'} color={"#F4983E"} height={10} width={100} />
-                                    </div>
-                                    : null
-                                }
-                            </div>
                         </div>
                         : null
                     }
                     {
                         this.state.step == 2 ?
-                        <div className="row-container">
-                            {/* {
-                                this.state.cropedFaces.map((face, filename)=>{
-                                    return(<img key={filename} onClick={(e)=>this.onSelectFace(e,filename)}
-                                        src={`data:image/jpeg;base64, ${face.contents}`} alt="not found"/>);
-                                })
-                            } */}
+                        <div>
                             <ImagePicker className="flex-1"
                                 images={this.state.cropedFaces.map((face, filename) => ({
                                     src: `data:image/jpeg;base64, ${face.contents}`, value: filename
                                 }))}
                                 onPick={this.onSelectFace}
                             />
+                            {
+                                this.state.isLoading ? 
+                                <div>
+                                    <p style={{color : "#F4983E", fontSize: "20x", marginBottom: "0", textAlign:"center"}}><b>내 클라우드에서 해당되는 얼굴을 찾는중입니다<br></br>
+                                        잠시만 기다려 주세요:)</b></p>
+                                    <div style={{marginLeft: "calc(50% - 75px)", height: "150px", overflowY : "hidden"}}>
+                                        <ReactLoading type={'bubbles'} color={"#F4983E"} height={10} width={100} />
+                                    </div>
+                                </div>
+                                : null
+                            }
                         </div>
                         : null
                     }
                     {
                         this.state.step == 3 ?
-                        <div>세 번째</div>
+                        <div>
+                            {
+                                this.state.resultImages.length == 0 ?
+                                <div>
+                                    일치하는 결과가 없습니다.
+                                </div>
+                                : <div>
+                                    <Gallery images={this.state.resultImages}/>
+                                </div>
+                            }
+                        </div>
                         : null
                     }
                     </DialogContent>
-                    <button className ="circle-btn" onClick={this.nextStep} 
+                    <button className ="circle-btn" onClick={this.nextStep} disabled={this.state.isLoading}
                         style = {{ padding : "12px"}}>{this.state.btnMsg}</button>
                 </Dialog>
             </div>
@@ -184,10 +265,17 @@ class PhotoSearch extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        userInfo : state.user
+        userInfo : state.user,
+        imageTempUrl : state.imageTempUrl
     }
   }
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setimageUrl : (images)=>dispatch(actions.setimageUrl(images))
+    }
+}
   
-PhotoSearch = connect(mapStateToProps)(PhotoSearch)
+PhotoSearch = connect(mapStateToProps, mapDispatchToProps)(PhotoSearch)
 
 export default PhotoSearch;

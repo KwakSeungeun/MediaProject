@@ -4,13 +4,19 @@ import sys
 
 currentDir = os.getcwd()
 
+targetListlen = len(sys.argv)
+
 fileName = sys.argv[1]
-user_id = sys.argv[2]
+userId = sys.argv[2]
 
-sourceFile = currentDir +'\\..\\..\\temp\\cropedFaces\\' + user_id + '\\' + fileName # 선택한 얼굴
-# targetFile = '../images/testImage1.jpg' # true 이미지
-
+sourceFile = currentDir +'\\..\\..\\temp\\cropedFaces\\' + userId + '\\' + fileName # 선택한 얼굴
 imageSource=open(sourceFile,'rb')
+
+
+for i in range(3,len(sys.argv)):
+    print(sys.argv[i])
+
+# targetFile = '../images/testImage1.jpg' # true 이미지
 # imageTarget=open(targetFile,'rb')
 
 # client = boto3.client('rekognition');
@@ -30,3 +36,4 @@ imageSource=open(sourceFile,'rb')
 
 # imageSource.close()
 # imageTarget.close()
+print("====Complete comparision====")

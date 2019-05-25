@@ -102,13 +102,18 @@ exports.faceComparison = (req, res)=>{
         // 파일 이름과 유저 아이디 받아오기
         let file_name = req.query.file_name;
         let user_id = req.query.user_id;
+        let target_list = req.query.target_list;
+
+        console.log("\n\n===============================")
+        console.log(target_list);
 
         // 파이썬 돌리기
         let detectionDir = __dirname + "\\..\\..\\..\\face_recognition\\src";
 
-        await cmd.run(`cd ${detectionDir} & activate face_recognition & python comp.py ${file_name} ${user_id}\n`);
+        await cmd.run(`cd ${detectionDir} & activate face_recognition & python comp.py ${file_name} ${user_id} ${target_list}\n`);
         resolve()
     }).then(()=>{
+        // croped 한 얼굴 이미지들 지우기 
         res.json({message : 'success'})
     })
 }

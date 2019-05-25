@@ -5,13 +5,12 @@ const _ = require('lodash');
 const fs = require('fs');
 
 exports.getList = (req, res)=>{
-
+  console.log("가져오기 시작!")
   axios.get(`${config.swiftUri}/v1/${config.adminProjectId}/${req.query.user_id}`,null,{
     headers:{
         'X-Auth-Token' : `${req.query.token}`,
     }
   }).then((files)=>{
-    console.log("FILES : ", files);
     res.json({
       data : files.data
     });

@@ -40,10 +40,10 @@ class MainContents extends Component {
     }
 
     render() {
-        let user_token = this.props.userInfo.token;
-        let toggle = this.props.toggleValue.toggle;
-        console.log(user_token)
-        console.log(toggle)
+        // let user_token = this.props.userInfo.token;
+        // let toggle = this.props.toggleValue.toggle;
+        // console.log(user_token)
+        // console.log(toggle)
     
     return (
         <Fragment>

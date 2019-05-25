@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
-import {render} from 'react-dom'
 import Gallery from 'react-grid-gallery'
 import { connect } from 'react-redux';
+import * as actions from '../actions';
 import _ from 'lodash';
 import axios from 'axios';
 import cloud from '../config/config';
@@ -15,7 +15,8 @@ class Thumb extends Component {
             IMAGES : [],
             files: [],
             sig: '',
-            exp: ''
+            exp: '',
+            isError : false,
         }
 
         // this.makeTempUrl = this.makeTempUrl.bind(this);
@@ -54,12 +55,12 @@ class Thumb extends Component {
                     user_id : this.props.userInfo.id
                 }
             }).then(async(res)=>{
-            
             await this.setState({
                 ...this.state,
                 files : res.data.data
             })
             let temp = [];
+            let imagesTempUrl = [];
             _.forEach(this.state.files, (val, i)=>{
                 let file = {
                     thumbnailWidth: 200,
@@ -73,64 +74,65 @@ class Thumb extends Component {
                     case ('jpg'||'jpeg'||'png'):
                         file = {
                             ...file,
-                           src:`http://15.164.100.240:8080/v1/${cloud.adminProjectId}/${this.props.userInfo.id}/${val.name}?temp_url_sig=${this.state.sig}&temp_url_expires=${this.state.exp}`,
-                           thumbnail:`http://15.164.100.240:8080/v1/${cloud.adminProjectId}/${this.props.userInfo.id}/${val.name}?temp_url_sig=${this.state.sig}&temp_url_expires=${this.state.exp}`
+                           src:`${cloud.swiftUri}/v1/${cloud.adminProjectId}/${this.props.userInfo.id}/${val.name}?temp_url_sig=${this.state.sig}&temp_url_expires=${this.state.exp}`,
+                           thumbnail:`${cloud.swiftUri}/v1/${cloud.adminProjectId}/${this.props.userInfo.id}/${val.name}?temp_url_sig=${this.state.sig}&temp_url_expires=${this.state.exp}`
                         }
+                        imagesTempUrl.push(file.src);
                         break;
                     case ('hwp'||'word'):
                         file ={
                             ...file,
-                            src: `http://15.164.100.240:8080/v1/${cloud.adminProjectId}/admin/image_doc.png?temp_url_sig=${cloud.adminSig}&temp_url_expires=${cloud.adminExp}`,
-                            thumbnail: `http://15.164.100.240:8080/v1/${cloud.adminProjectId}/admin/image_doc.png?temp_url_sig=${cloud.adminSig}&temp_url_expires=${cloud.adminExp}`
+                            src: `${cloud.swiftUri}/v1/${cloud.adminProjectId}/admin/image_doc.png?temp_url_sig=${cloud.adminSig}&temp_url_expires=${cloud.adminExp}`,
+                            thumbnail: `${cloud.swiftUri}/v1/${cloud.adminProjectId}/admin/image_doc.png?temp_url_sig=${cloud.adminSig}&temp_url_expires=${cloud.adminExp}`
                         }
                         break;
                     case ('excel'):
                             file ={
                                 ...file,
-                                src: `http://15.164.100.240:8080/v1/${cloud.adminProjectId}/admin/image_excel.png?temp_url_sig=${cloud.adminSig}&temp_url_expires=${cloud.adminExp}`,
-                                thumbnail: `http://15.164.100.240:8080/v1/${cloud.adminProjectId}/admin/image_excel.png?temp_url_sig=${cloud.adminSig}&temp_url_expires=${cloud.adminExp}`
+                                src: `${cloud.swiftUri}/v1/${cloud.adminProjectId}/admin/image_excel.png?temp_url_sig=${cloud.adminSig}&temp_url_expires=${cloud.adminExp}`,
+                                thumbnail: `${cloud.swiftUri}/v1/${cloud.adminProjectId}/admin/image_excel.png?temp_url_sig=${cloud.adminSig}&temp_url_expires=${cloud.adminExp}`
                             }
                             break;
                     case ('ppt'||'pptx'):
                         file = {
                             ...file,
-                            src: `http://15.164.100.240:8080/v1/${cloud.adminProjectId}/admin/image_ppt.png?temp_url_sig=${cloud.adminSig}&temp_url_expires=${cloud.adminExp}`,
-                            thumbnail: `http://15.164.100.240:8080/v1/${cloud.adminProjectId}/admin/image_ppt.png?temp_url_sig=${cloud.adminSig}&temp_url_expires=${cloud.adminExp}`
+                            src: `${cloud.swiftUri}/v1/${cloud.adminProjectId}/admin/image_ppt.png?temp_url_sig=${cloud.adminSig}&temp_url_expires=${cloud.adminExp}`,
+                            thumbnail: `${cloud.swiftUri}/v1/${cloud.adminProjectId}/admin/image_ppt.png?temp_url_sig=${cloud.adminSig}&temp_url_expires=${cloud.adminExp}`
                         }
                         break;
                     case ('mp3'||'wma'):
                         file = {
                             ...file,
-                            src: `http://15.164.100.240:8080/v1/${cloud.adminProjectId}/admin/image_music.png?temp_url_sig=${cloud.adminSig}&temp_url_expires=${cloud.adminExp}`,
-                            thumbnail: `http://15.164.100.240:8080/v1/${cloud.adminProjectId}/admin/image_music.png?temp_url_sig=${cloud.adminSig}&temp_url_expires=${cloud.adminExp}`
+                            src: `${cloud.swiftUri}/v1/${cloud.adminProjectId}/admin/image_music.png?temp_url_sig=${cloud.adminSig}&temp_url_expires=${cloud.adminExp}`,
+                            thumbnail: `${cloud.swiftUri}/v1/${cloud.adminProjectId}/admin/image_music.png?temp_url_sig=${cloud.adminSig}&temp_url_expires=${cloud.adminExp}`
                         }
                         break;
                     case ('avi'||'mp4'||'wmp'||'mpeg'):
                         file = {
                             ...file,
-                            src:  `http://15.164.100.240:8080/v1/${cloud.adminProjectId}/admin/image_video.png?temp_url_sig=${cloud.adminSig}&temp_url_expires=${cloud.adminExp}`,
-                            thumbnail:  `http://15.164.100.240:8080/v1/${cloud.adminProjectId}/admin/image_video.png?temp_url_sig=${cloud.adminSig}&temp_url_expires=${cloud.adminExp}`
+                            src:  `${cloud.swiftUri}/v1/${cloud.adminProjectId}/admin/image_video.png?temp_url_sig=${cloud.adminSig}&temp_url_expires=${cloud.adminExp}`,
+                            thumbnail:  `${cloud.swiftUri}/v1/${cloud.adminProjectId}/admin/image_video.png?temp_url_sig=${cloud.adminSig}&temp_url_expires=${cloud.adminExp}`
                         }
                         break;
                     case ('zip'||'tar'||'rar'):
                         file = {
                             ...file,
-                            src:  `http://15.164.100.240:8080/v1/${cloud.adminProjectId}/admin/image_zip.png?temp_url_sig=${cloud.adminSig}&temp_url_expires=${cloud.adminExp}`,
-                            thumbnail:  `http://15.164.100.240:8080/v1/${cloud.adminProjectId}/admin/image_zip.png?temp_url_sig=${cloud.adminSig}&temp_url_expires=${cloud.adminExp}`
+                            src:  `${cloud.swiftUri}/v1/${cloud.adminProjectId}/admin/image_zip.png?temp_url_sig=${cloud.adminSig}&temp_url_expires=${cloud.adminExp}`,
+                            thumbnail:  `${cloud.swiftUri}/v1/${cloud.adminProjectId}/admin/image_zip.png?temp_url_sig=${cloud.adminSig}&temp_url_expires=${cloud.adminExp}`
                         }
                         break;
                     case ('pdf'):
                         file = {
                             ...file,
-                            src:  `http://15.164.100.240:8080/v1/${cloud.adminProjectId}/admin/i_pdf.png?temp_url_sig=${cloud.adminSig}&temp_url_expires=${cloud.adminExp}`,
-                            thumbnail:  `http://15.164.100.240:8080/v1/${cloud.adminProjectId}/admin/i_pdf.png?temp_url_sig=${cloud.adminSig}&temp_url_expires=${cloud.adminExp}`
+                            src:  `${cloud.swiftUri}/v1/${cloud.adminProjectId}/admin/i_pdf.png?temp_url_sig=${cloud.adminSig}&temp_url_expires=${cloud.adminExp}`,
+                            thumbnail:  `${cloud.swiftUri}/v1/${cloud.adminProjectId}/admin/i_pdf.png?temp_url_sig=${cloud.adminSig}&temp_url_expires=${cloud.adminExp}`
                         }
                         break;
                     default ://그 외
                         file = {
                             ...file,
-                            src: `http://15.164.100.240:8080/v1/${cloud.adminProjectId}/admin/image_etc.png?temp_url_sig=${cloud.adminSig}&temp_url_expires=${cloud.adminExp}`,
-                            thumbnail: `http://15.164.100.240:8080/v1/${cloud.adminProjectId}/admin/image_etc.png?temp_url_sig=${cloud.adminSig}&temp_url_expires=${cloud.adminExp}`
+                            src: `${cloud.swiftUri}/v1/${cloud.adminProjectId}/admin/image_etc.png?temp_url_sig=${cloud.adminSig}&temp_url_expires=${cloud.adminExp}`,
+                            thumbnail: `${cloud.swiftUri}/v1/${cloud.adminProjectId}/admin/image_etc.png?temp_url_sig=${cloud.adminSig}&temp_url_expires=${cloud.adminExp}`
                         }
                         break;
                 }
@@ -138,18 +140,31 @@ class Thumb extends Component {
             })
             await this.setState({
                 ...this.state,
-                IMAGES : temp
+                IMAGES : temp,
+                isError : false
             })
+            await this.props.setimageUrl(imagesTempUrl);
         })
         .catch(err=>{
                 console.log(err)
-            });
+                this.setState({
+                    ...this.state,
+                    isError : true
+                })
+        });
     }
 
     render(){
         return (    
             <div style={{marginTop : "32px"}}>
-                <Gallery images={this.state.IMAGES}/>
+                {
+                    this.state.isError ? 
+                    <div style={
+                        {marginTop:"30%", padding:"8px", border:"1px solid grey", borderRadius:"10px", textAlign: "center"}}>
+                        <p><b>네트워크에 문제가 있어 데이터를 받아 올 수 없습니다 :(</b></p>
+                    </div>
+                    : <Gallery images={this.state.IMAGES}/>
+                }
             </div>
         )
     }
@@ -160,7 +175,14 @@ const mapStateToProps = (state) => {
         userInfo : state.user
     }
   }
+
+  const mapDispatchToProps = (dispatch) => {
+    return {
+        setimageUrl : (images)=>dispatch(actions.setimageUrl(images))
+    }
+}
+
   
-Thumb = connect(mapStateToProps)(Thumb)
+Thumb = connect(mapStateToProps, mapDispatchToProps)(Thumb)
 
 export default Thumb;

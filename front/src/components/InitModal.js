@@ -11,6 +11,7 @@ import PersonAdd from '@material-ui/icons/PersonAdd';
 import Divider from '@material-ui/core/Divider';
 import { connect } from 'react-redux';
 import * as actions from '../actions';
+import { DialogTitle } from '@material-ui/core';
 
 class InitModal extends Component {
   constructor(props){
@@ -50,22 +51,24 @@ class InitModal extends Component {
               aria-describedby="alert-dialog-description"
             >
               {/* 상단 선택 */}
-              <div className="row-container"  style={{marginTop: "16px"}}>
-                  <Button onClick={this.onLogin} variant={this.state.selectedLogin? "contained": "outlined"} className="flex-1"> 
-                      <Person />LOGIN
-                  </Button>
-                  <Button onClick={this.onSignup} variant={!this.state.selectedLogin? "contained": "outlined"} className="flex-1" style={{marginLeft: "8px"}}>
-                      <PersonAdd />SIGN UP
-                  </Button>
-              </div>
-              <Divider style={{marginTop : "16px"}} />
-              <DialogContent>
-                  {
-                    this.state.selectedLogin?
-                    (<LoginBox/>)
-                    :(<SignUpBox selectedLogin={this.changeSelected}/>)
-                  }
-              </DialogContent>
+            <DialogTitle style={{color : "#F4983E"}}>CLOUD 환영합니다 :)</DialogTitle>
+            <p style={{color : "#F4983E", margin : "0px 0px 16px 32px"}}>로그인시 우리의 서비스를 이용할 수 있습니다</p>
+            <Divider style={{marginBottom : "16px"}} />
+            <div className="row-container">
+                <Button onClick={this.onLogin} variant={this.state.selectedLogin? "contained": "outlined"} className="flex-1"> 
+                    <Person />LOGIN
+                </Button>
+                <Button onClick={this.onSignup} variant={!this.state.selectedLogin? "contained": "outlined"} className="flex-1" style={{marginLeft: "8px"}}>
+                    <PersonAdd />SIGN UP
+                </Button>
+            </div>
+            <DialogContent>
+                {
+                  this.state.selectedLogin?
+                  (<LoginBox/>)
+                  :(<SignUpBox selectedLogin={this.changeSelected}/>)
+                }
+            </DialogContent>
         </Dialog>
       </div>
     );

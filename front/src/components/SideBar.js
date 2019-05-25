@@ -4,6 +4,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Tooltip from '@material-ui/core/Tooltip';
 import PhotoSearch from './PhotoSearch';
+import Divider from '@material-ui/core/Divider';
 import _ from 'lodash';
 
 class SideBar extends Component {
@@ -64,21 +65,29 @@ class SideBar extends Component {
                             <PhotoSearch open = {this.state.listItem.photo_search} close = {this.onClose}/>
                         </ListItem>
                     </Tooltip>
-                        {/* <ListItem button>
-                            <ListItemText primary="폴더 자동화정리" />
-                        </ListItem> */}
-                        <ListItem button>
-                            <ListItemText primary="내 폴더"/>
-                        </ListItem>
-                        <ListItem button>
-                            <ListItemText primary="최근 열어본 파일"/>
-                        </ListItem>
-                        <ListItem button>
-                            <ListItemText primary="즐겨찾기"/>
-                        </ListItem>
-                        <ListItem button>
-                            <ListItemText primary="휴지통"/>
-                        </ListItem>
+                    <Divider style={{margin: "16px 0px 16px 0px"}}></Divider>
+                    <ListItem button>
+                        <ListItemText primary="즐겨찾기"/>
+                    </ListItem>
+                    <ListItem button>
+                        <ListItemText primary="내 폴더"/>
+                    </ListItem>
+                    <ListItem button>
+                        <ListItemText primary="폴더 추가"/>
+                    </ListItem>
+
+                    <Divider style={{margin: "16px 0px 16px 0px"}}></Divider>
+                    <ListItem button>
+                        <ListItemText primary="최근 열어본 파일"/>
+                    </ListItem>
+                    <ListItem button>
+                        <ListItemText primary="파일 추가"/>
+                    </ListItem>
+
+                    <Divider style={{margin: "16px 0px 16px 0px"}}></Divider>
+                    <ListItem button>
+                        <ListItemText primary="휴지통"/>
+                    </ListItem>
                 </List>
             </div>
             {/* 사용자 별 폴더 */}

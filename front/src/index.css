@@ -31,13 +31,13 @@ code {
   padding: 20px;
   flex: 2;
   overflow-y: hidden;
-  border-right: 1px solid rgb(148, 195, 98);
+  /* border: 1px solid rgb(148, 195, 98); */
 }
 .contents-container{
   background: #fafafa;
   /* background: yellow; */
   padding: 20px;
-  flex: 10;
+  flex: 12;
   overflow-y: auto;
   /* border-top: 1px solid rgb(148, 195, 98); */
 }
@@ -189,6 +189,11 @@ img{
   flex-direction: column;
   font-size: 16px;
 }
+ 
+.circleBorder{
+  border: 4px solid #F4983E;
+  border-radius: 45%;
+}
 
 .Icon {
   opacity: 0.3;
@@ -274,4 +279,13 @@ button {
 button:disabled {
   background: rgb(189, 189, 189);
   cursor: default;
+}
+
+.float-box{
+  position:fixed;
+	width:200px;
+	height:auto;
+	bottom:80px;
+	right:40px;
+	text-align:right;
 }

@@ -11,17 +11,20 @@ class Main extends Component {
   render() {
     return (
       <div className="main">
-        <div className="top-container"><TopBar></TopBar></div>
-        <div className="main-container">
-          <div className="side-container"><SideBar></SideBar></div>
-          <div className="contents-container">
-            <MainContents user={this.props.user} dir={this.props.dir}/>
-          </div>
-        </div>
         {
           this.props.initModalOpen == true ?
-          <InitModal/>
-          :null 
+          <div>
+            <InitModal/>
+          </div>
+          :<div>
+            <div className="top-container"><TopBar></TopBar></div>
+              <div className="main-container">
+                <div className="side-container"><SideBar></SideBar></div>
+                <div className="contents-container">
+                  <MainContents user={this.props.user} dir={this.props.dir}/>
+                </div>
+              </div>
+            </div>
         }
       </div>
     );

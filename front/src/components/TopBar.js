@@ -5,6 +5,7 @@ import IconButton from '@material-ui/core/IconButton';
 import SearchIcon  from '@material-ui/icons/Search';
 import Button from '@material-ui/core/Button'
 import logo from '../img/logo2.png';
+import profile from '../img/profile.jpg';
 import { connect } from 'react-redux';
 import * as actions from '../actions';
 import { stat } from 'fs';
@@ -43,18 +44,20 @@ class TopBar extends Component {
                 {/* 검색 */}
                 <div className="flex-6 search">
                     <InputBase placeholder="파일을 검색해 보세요" className="flex-7"></InputBase>
-                    <IconButton style={{margin: "0px 0px 10px 0px"}} className="flex-1" 
+                    <IconButton style={{margin: "0px 0px 3px 0px"}} className="flex-1" 
                         onClick={this.onSearch} aria-label="Search">
                         <SearchIcon />
                     </IconButton>
                 </div>
 
                 {/* 프로필 및 설정 */}
-                <div className="flex-2">
+                <div className="flex-3">
                 {
                     this.props.initModalOpen == false ?
                     <div className="row-container"> 
-                        <p style={{fontSize : "16px", marginRight:"16px"}}><b>{this.props.userInfo.name}&nbsp;님</b></p>
+                        <img style={{width : "55px", height: "auto"}} className="circleBorder" src={profile}></img>
+                        <p style={{fontSize : "16px", marginRight:"16px", marginLeft: "16px"}}><b style={{color : "#F4983E"}}>{this.props.userInfo.name}</b>
+                            &nbsp;님 <br></br> 반갑습니다 :)</p>
                         <button onClick={this.onLogout}>로그아웃</button>
                     </div>
                     :null 

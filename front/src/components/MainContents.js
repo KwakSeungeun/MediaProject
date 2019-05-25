@@ -48,10 +48,13 @@ class MainContents extends Component {
     return (
         <Fragment>
             <div>
-                <div className="row-container" style={{width: "50%"}}>
-                    <Button variant="contained" onClick={this.openAddFolder} className="flex-1">폴더추가</Button>
-                    <Button variant="contained" onClick={this.openAddFiles} 
-                        className="flex-1" style={{marginLeft: "16px"}}>파일추가</Button>
+                <div className="row-container float-box">
+                    <Button style={{background: "rgb(148, 195, 98)", color: "white", boxShadow: "2px 2px 3px #999"}} 
+                        variant="contained" onClick={this.openAddFolder} className="flex-1">
+                        <b style={{fontSize: "20px"}}>+</b>&nbsp;폴더추가</Button>
+                    <Button style={{background: "rgb(148, 195, 98)", color: "white",marginLeft: "16px"}}
+                        variant="contained" onClick={this.openAddFiles} className="flex-1">
+                        <b style={{fontSize: "20px"}}>+</b>&nbsp;파일추가</Button>
                 </div>
                 {/* 파일 추가 모달 */}
                 <Dialog

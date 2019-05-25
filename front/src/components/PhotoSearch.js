@@ -136,11 +136,11 @@ class PhotoSearch extends Component {
                 })
 
                 // 결과
-                await this.setState({
-                    ...this.state,
-                    step : 3,
-                    btnMsg : '종료'
-                });
+                // await this.setState({
+                //     ...this.state,
+                //     step : 3,
+                //     btnMsg : '종료'
+                // });
                 break;  
             case 3 : 
                 // 종료
@@ -201,7 +201,7 @@ class PhotoSearch extends Component {
                                         <div>
                                             <p style={{color : "#F4983E", fontSize: "20x", marginBottom: "0", textAlign:"center"}}><b>선택한 사진에서 얼굴을 찾고 있습니다<br></br>
                                                 잠시만 기다려 주세요 :)</b></p>
-                                            <div style={{marginLeft: "calc(50% - 75px)", height: "150px", overflowY : "hidden"}}>
+                                            <div style={{marginLeft: "calc(50% - 50px)", height: "100px", overflowY : "hidden"}}>
                                                 <ReactLoading type={'bubbles'} color={"#F4983E"} height={10} width={100} />
                                             </div>
                                         </div>
@@ -230,7 +230,7 @@ class PhotoSearch extends Component {
                                 <div>
                                     <p style={{color : "#F4983E", fontSize: "20x", marginBottom: "0", textAlign:"center"}}><b>내 클라우드에서 해당되는 얼굴을 찾는중입니다<br></br>
                                         잠시만 기다려 주세요:)</b></p>
-                                    <div style={{marginLeft: "calc(50% - 75px)", height: "150px", overflowY : "hidden"}}>
+                                    <div style={{marginLeft: "calc(50% - 50px)", height: "150px", overflowY : "hidden"}}>
                                         <ReactLoading type={'bubbles'} color={"#F4983E"} height={10} width={100} />
                                     </div>
                                 </div>

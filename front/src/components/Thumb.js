@@ -77,7 +77,7 @@ class Thumb extends Component {
                            src:`${cloud.swiftUri}/v1/${cloud.adminProjectId}/${this.props.userInfo.id}/${val.name}?temp_url_sig=${this.state.sig}&temp_url_expires=${this.state.exp}`,
                            thumbnail:`${cloud.swiftUri}/v1/${cloud.adminProjectId}/${this.props.userInfo.id}/${val.name}?temp_url_sig=${this.state.sig}&temp_url_expires=${this.state.exp}`
                         }
-                        imagesTempUrl.push(file.src);
+                        imagesTempUrl.push(`${val.name}_${this.state.sig}_${this.state.exp}`);
                         break;
                     case ('hwp'||'word'):
                         file ={

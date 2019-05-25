@@ -5,6 +5,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import Divider from '@material-ui/core/Divider';
 import Dropzone from './DropZone.js'
 import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button'
 import CloseIcon from '@material-ui/icons/Close';
 import config from '../config/config';
 import axios from 'axios';
@@ -32,12 +33,16 @@ class PhotoSearch extends Component {
         };
     }
 
-    onClose = ()=>{
-        this.setState({
-            step : 1, 
+    onClose = async()=>{
+        await this.setState({
+            isLoading: false,
+            step : 1,
             btnMsg : '다음단계',
             selectedFile : null,
-            imagePreviewUrl : ''
+            imagePreviewUrl : '',
+            cropedFaces : null,
+            selectedCropedFaces : null,
+            resultImages : [],
         });
         this.props.close();
     }
@@ -48,7 +53,6 @@ class PhotoSearch extends Component {
             ...this.state,
             selectedCropedFaces : `${this.props.userInfo.id}_face_${res.value}.jpeg`
         })
-        console.log("선택한 이미지 이름 : ", this.state.selectedCropedFaces)
     }
 
     getList = async(files) => {
@@ -60,19 +64,20 @@ class PhotoSearch extends Component {
                 isSelected: false,
                 src : ``,
                 thumbnail: ``,
-                caption: `${val.name}`
             };
 
             file = {
                 ...file,
-                src:`${config.swiftUri}/v1/${config.adminProjectId}/${this.props.userInfo.id}/${val.name}?temp_url_sig=${this.state.sig}&temp_url_expires=${this.state.exp}`,
-                thumbnail:`${config.swiftUri}/v1/${config.adminProjectId}/${this.props.userInfo.id}/${val.name}?temp_url_sig=${this.state.sig}&temp_url_expires=${this.state.exp}`
+                src: val,
+                thumbnail:val
             }
             temp.push(file);    
         })
         await this.setState({
             ...this.state,
             resultImages : temp,
+            step : 3,
+            btnMsg : '종료'
         })
     }
 
@@ -90,10 +95,15 @@ class PhotoSearch extends Component {
                 await formData.append('file', this.state.selectedFile);
                 await formData.append('field', this.props.userInfo.id);
                 await axios.post(`${config.serverUri}/search/face/detection`, formData)
-                .then((res)=>{
-                    this.setState({
+                .then(async(res)=>{
+                    let temp = [];
+                    _.forEach(res.data.data, (val, key)=>{
+                        if(key >= res.data.length) return;
+                        else temp.push(val)
+                    })
+                    await this.setState({
                         ...this.state,
-                        cropedFaces : res.data.data,
+                        cropedFaces : temp,
                         isLoading : false
                     })
                 }).catch(err=>{
@@ -115,7 +125,6 @@ class PhotoSearch extends Component {
                 await this.setState({
                     isLoading : true
                 })
-                console.log("image temp url", this.props.imageTempUrl.toString());
                 await axios.get(`${config.serverUri}/search/face/comparison`, {
                     params : {
                         file_name : this.state.selectedCropedFaces,
@@ -123,24 +132,19 @@ class PhotoSearch extends Component {
                         target_list : this.props.imageTempUrl.toString()
                     }
                 }).then(async(res)=>{
-                    console.log("얼굴 유사도 비교 : ", res);
-                    await this.setState({
-                        isLoading : false
+                    this.getList(res.data.url);
+                    this.setState({
+                        isLoading : false,
                     })
                 }).catch(async(err)=>{
                     console.log(err);
                     alert("에러!")
                     await this.setState({
-                        isLoading : false
+                        isLoading : false,
+                        step : 3,
+                        btnMsg : '종료'
                     })
                 })
-
-                // 결과
-                // await this.setState({
-                //     ...this.state,
-                //     step : 3,
-                //     btnMsg : '종료'
-                // });
                 break;  
             case 3 : 
                 // 종료
@@ -241,14 +245,20 @@ class PhotoSearch extends Component {
                     }
                     {
                         this.state.step == 3 ?
-                        <div>
+                        <div style={{width: "100%"}}>
                             {
                                 this.state.resultImages.length == 0 ?
                                 <div>
                                     일치하는 결과가 없습니다.
                                 </div>
-                                : <div>
-                                    <Gallery images={this.state.resultImages}/>
+                                : <div style={{flexDirection:"column"}}>
+                                    <ImagePicker images={this.state.resultImages} />
+                                    <div className="row-container" style={{marginTop : "16px"}}>
+                                        <Button style={{padding : "4px", border: "2px solid #F4983E"}} 
+                                            className="flex-1" variant="outlined" >새로운 폴더로 옮기기</Button>
+                                        <Button style={{padding : "4px",marginLeft : "32px", border: "2px solid #F4983E"}} 
+                                            className="flex-1" variant="outlined" >다운로드</Button>
+                                    </div>
                                 </div>
                             }
                         </div>

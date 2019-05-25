@@ -2,6 +2,7 @@ const formidable = require('formidable');
 const fs = require('fs');
 // const pythonShell = require('python-shell');
 const cmd = require('node-command-line');
+const _ = require('lodash');
 
 /**
  * Promise all
@@ -57,7 +58,7 @@ exports.faceDetection = (req, res)=>{
     let fileDir;
     let sourceDir = __dirname + '\\..\\..\\..\\temp\\sourceImage';
     let detectionDir = __dirname + "\\..\\..\\..\\face_recognition\\src";
-    let images = [];
+    let count
 
     if(!fs.existsSync(sourceDir)){
         fs.mkdirSync(sourceDir);
@@ -75,7 +76,11 @@ exports.faceDetection = (req, res)=>{
         })
     }).then(async()=>{
         // python 실행 (arg로 아이디 보내주기)
-        let count = await cmd.run(`cd ${detectionDir} & activate face_recognition & python faceDetection.py ${user_id}\n`);
+        let result = await cmd.run(`cd ${detectionDir} & activate face_recognition & python faceDetection.py ${user_id}\n`);
+        if(result.success) {
+            count = parseInt(result.message)
+        }
+        else res.status(500).json({message : 'Fail face detection python code'})
     }).then(()=>{
         //  소스파일 삭제 (croped 는 얼굴 다 찾고 삭제 하기)
         fs.unlinkSync(`${fileDir}`);
@@ -85,7 +90,8 @@ exports.faceDetection = (req, res)=>{
         .then(files => {
             // 완료
             res.json({
-                data : files
+                data : files,
+                length : count
             });
         })
         .catch( error => {
@@ -106,12 +112,38 @@ exports.faceComparison = (req, res)=>{
 
         // 파이썬 돌리기
         let detectionDir = __dirname + "\\..\\..\\..\\face_recognition\\src";
-        console.log(target_list);
 
-        await cmd.run(`cd ${detectionDir} & activate face_recognition & python comp.py ${file_name} ${user_id} ${target_list}\n`);
+        let result = await cmd.run(`cd ${detectionDir} & activate face_recognition & python comp.py ${file_name} ${user_id} ${target_list}\n`);
+        // console.log(result);
+        if(result.success){
+            let parse_res = result.message.split('\n');
+            let length = parseInt(parse_res[0])
+            parse_res.shift()
+            if(length == 0){
+                res.json({
+                    message : 'success',
+                    url : null  
+                })
+            } else if (length > 0) {
+                let temp = [];
+                _.forEach(parse_res,(value, index)=>{
+                    console.log("VAL \n", value)
+                    if(index== length ) return;
+                    else temp.push(value.replace('\r',''))
+                })
+                res.json({
+                    message : 'success',
+                    url : temp  
+                })
+            } else{
+                res.status(500).json({message : 'Fail comparision python code'})
+            }
+        } else {
+            res.status(500).json({message : 'Fail comparision python code'})
+        }
         resolve()
     }).then(()=>{
         // croped 한 얼굴 이미지들 지우기 
-        res.json({message : 'success'})
+        
     })
 }

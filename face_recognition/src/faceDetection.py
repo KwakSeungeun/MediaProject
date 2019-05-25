@@ -35,3 +35,5 @@ for (x,y,w,h) in faces:
     face_file_name = os.path.join(currentDir, r"..\..\temp\cropedFaces\\"+user_id +"\\"+ user_id +"_face_") + str(i) + ".jpeg"
     cv2.imwrite(face_file_name, sub_face)
     i += 1
+
+print(len(faces))

@@ -49,8 +49,6 @@ class Upload extends Component {
       .then((res)=>{
         console.log(res);
         alert("업로드 완료!");
-        this.props.setToggle();
-        this.props.resetToggle();
         this.props.close();
       })
       .catch(err=>{
@@ -109,8 +107,6 @@ class Upload extends Component {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-      // setToggle: () => dispatch(setToggle()),
-      // resetToggle: () => dispatch(resetToggle())
   }
 }
 

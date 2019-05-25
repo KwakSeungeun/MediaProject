@@ -96,3 +96,19 @@ exports.faceDetection = (req, res)=>{
         res.status(500).json({message : "fail face Detection"});
     })
 }
+
+exports.faceComparison = (req, res)=>{
+    new Promise(async(resolve, reject)=>{
+        // 파일 이름과 유저 아이디 받아오기
+        let file_name = req.query.file_name;
+        let user_id = req.query.user_id;
+
+        // 파이썬 돌리기
+        let detectionDir = __dirname + "\\..\\..\\..\\face_recognition\\src";
+
+        await cmd.run(`cd ${detectionDir} & activate face_recognition & python comp.py ${file_name} ${user_id}\n`);
+        resolve()
+    }).then(()=>{
+        res.json({message : 'success'})
+    })
+}

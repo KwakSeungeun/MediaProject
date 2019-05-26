@@ -159,11 +159,10 @@ class Thumb extends Component {
             <div style={{marginTop : "32px"}}>
                 {
                     this.state.isError ? 
-                    <div></div>
-                    // <div style={
-                    //     {marginTop:"30%", padding:"8px", border:"1px solid grey", borderRadius:"10px", textAlign: "center"}}>
-                    //     <p><b>네트워크에 문제가 있어 데이터를 받아 올 수 없습니다 :(</b></p>
-                    // </div>
+                    <div style={
+                        {marginTop:"30%", padding:"8px", border:"1px solid grey", borderRadius:"10px", textAlign: "center"}}>
+                        <p><b>클라우드에 데이터를 저장해 보세요! :)</b></p>
+                    </div>
                     : <Gallery images={this.state.IMAGES}/>
                 }
             </div>

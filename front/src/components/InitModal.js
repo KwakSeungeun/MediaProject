@@ -4,6 +4,7 @@ import Button from '@material-ui/core/Button';
 import DialogContent from '@material-ui/core/DialogContent';
 import TextField from '@material-ui/core/TextField';
 // import SHA512  from 'crypt o-js/sha512';
+import logo from '../img/logo2.png';
 import axios from 'axios';
 import config from '../config/config';
 import Person from '@material-ui/icons/Person';
@@ -51,8 +52,11 @@ class InitModal extends Component {
               aria-describedby="alert-dialog-description"
             >
               {/* 상단 선택 */}
-            <DialogTitle style={{color : "#F4983E"}}>CLOUD 환영합니다 :)</DialogTitle>
-            <p style={{color : "#F4983E", margin : "0px 0px 16px 32px"}}>로그인시 우리의 서비스를 이용할 수 있습니다</p>
+            <div className="row-container" style={{margin: "32px 32px 0px 32px"}}>
+              <img src={logo} alt= "home" style={{flex: "1", margin : "0px 0px 16px 0px", width : "80px", height: "auto"}}/>
+              <p style={{textAlign:"right", margin : "0px 0px 16px 32px", flex: "12"}}>
+              <b>환영합니다 :)</b></p>
+            </div>
             <Divider style={{marginBottom : "16px"}} />
             <div className="row-container">
                 <Button onClick={this.onLogin} variant={this.state.selectedLogin? "contained": "outlined"} className="flex-1"> 

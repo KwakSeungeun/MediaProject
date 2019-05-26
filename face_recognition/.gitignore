@@ -1,0 +1,4 @@
+/open-cv/detectedFaces/*
+/lib/*
+images/detectedFaces
+src/config.py

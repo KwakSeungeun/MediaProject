@@ -1,30 +1,50 @@
 import React, { Component } from 'react';
-import LoginModal from '../components/LoginModal'
-import Toolbar from '@material-ui/core/Toolbar';
-import AppBar from '@material-ui/core/AppBar';
-import Typography from '@material-ui/core/Typography';
+import '../index.css'
+import SideBar from '../components/SideBar'
+import TopBar from '../components/TopBar'
+import InitModal from '../components/InitModal';
+import MainContents from '../components/MainContents';
+import { connect } from 'react-redux';
+import * as actions from '../actions';
 
 class Main extends Component {
   render() {
     return (
-      <div>
-        <LoginModal/>
-        <AppBar position="static" color="default">
-          <Toolbar>
-            <Typography variant="h5">
-              Cloud Service              
-            </Typography>
-          </Toolbar>
-        </AppBar>
-        <div>
-          {/* 사이드바 */}
-          <div></div>
-          {/* 메인 */}
-          <div></div>
-        </div>
+      <div className="main">
+        {
+          this.props.initModalOpen == true ?
+          <div>
+            <InitModal/>
+          </div>
+          :<div>
+            <div className="top-container"><TopBar></TopBar></div>
+              <div className="main-container">
+                <div className="side-container"><SideBar></SideBar></div>
+                <div className="contents-container">
+                  <MainContents user={this.props.user} dir={this.props.dir}/>
+                </div>
+              </div>
+            </div>
+        }
       </div>
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+      user: state.user, //현재 component의 props에 저장
+      dir: state.userDir,
+      initModalOpen : state.initModal
+  };
+}
+
+const mapDispatchProps = (dispatch) => {
+  return {
+    setInitModalOpen : (open) => { dispatch(actions.setInitModalOpen(open)) }
+  }
+}
+
+Main = connect(mapStateToProps,mapDispatchProps)(Main);
 
 export default Main;

@@ -4,8 +4,6 @@
 클라우드 스토리지 플랫폼을 구축하고 얼굴 인식과 비교를 통해 인물 사진 필터링 서비스를 제공하는 웹 앱 서비스 
 ```
 
-<iframe width="640" height="360" src="https://drive.google.com/open?id=1Efzjk9d19lsHIHmHvJeEWnDCuM_a_7P_" frameborder="0" gesture="media" allowfullscreen=""></iframe>
-
 #### 데모 영상  
 [![영상 링크](./imgs/demo.PNG)](https://drive.google.com/open?id=1Efzjk9d19lsHIHmHvJeEWnDCuM_a_7P_ "영상 링크")
 

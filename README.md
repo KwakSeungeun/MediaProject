@@ -5,7 +5,7 @@
 ```
 
 #### 데모 영상  
-[영상 링크](https://drive.google.com/open?id=1Efzjk9d19lsHIHmHvJeEWnDCuM_a_7P_)
+[영상 링크(C:\Users\17063\MediaProject/demo.PNG)](https://drive.google.com/open?id=1Efzjk9d19lsHIHmHvJeEWnDCuM_a_7P_ "영상 링크")
 
 
 #### Architecture

@@ -18,7 +18,7 @@
 ![faceSearch](./imgs/얼굴검색3.png)
 
 ![fileUpload](./imgs/파일업로드.png)
-
+---
 #### 최종 발표 PPT
 [PPT 링크](https://drive.google.com/open?id=1mo6ohNDbKKQj5uMPDHTi4xmaiOnOMY8R)
 

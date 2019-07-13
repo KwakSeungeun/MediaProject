@@ -22,9 +22,7 @@
 #### 최종 발표 PPT
 [PPT 링크](https://drive.google.com/open?id=1mo6ohNDbKKQj5uMPDHTi4xmaiOnOMY8R)
 
-#### CLOUD 관련 정리 : https://github.com/KwakSeungeun/Install_Openstack/tree/master/What%20_is_CLOUD
-
-#### OPENSTACK 설치 가이드 : https://github.com/KwakSeungeun/Install_Openstack/tree/master/Install_OEPNSTACK 
+#### CLOUD 와 OPENSTACK 정리, 개발 중 이슈 : https://github.com/KwakSeungeun/Install_Openstack
 
 #### 얼굴 인식 검색 관련 조사 : https://github.com/KwakSeungeun/Face_recognition.git 
 

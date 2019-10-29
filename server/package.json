@@ -23,7 +23,7 @@
     "mysql2": "^1.6.5",
     "node-command-line": "^1.0.2",
     "python-shell": "^1.0.7",
-    "sequelize": "^5.1.1",
+    "sequelize": "^5.15.1",
     "uuid": "^3.3.2"
   }
 }
